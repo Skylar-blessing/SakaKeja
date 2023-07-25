@@ -4,11 +4,11 @@ from sqlalchemy_serializer import SerializerMixin
 class Owner(db.Model, SerializerMixin):
     __tablename__ = 'owners'
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(100), nullable=False)
-    last_name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    phone_number = db.Column(db.String(20), nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    first_name = db.Column(db.String(100))
+    last_name = db.Column(db.String(100))
+    email = db.Column(db.String(120))
+    phone_number = db.Column(db.String(20))
+    password = db.Column(db.String(100))
     
     houses = db.relationship("House", backref="owner")
     
@@ -18,11 +18,11 @@ class Owner(db.Model, SerializerMixin):
 class Tenant(db.Model, SerializerMixin):
     __tablename__ = 'tenants'
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(100), nullable=False)
-    last_name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    phone_number = db.Column(db.String(20), nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    first_name = db.Column(db.String(100))
+    last_name = db.Column(db.String(100))
+    email = db.Column(db.String(120))
+    phone_number = db.Column(db.String(20))
+    password = db.Column(db.String(100))
     
     houses = db.relationship("House", backref="tenant")
     reviews = db.relationship("Review", backref="tenant")
@@ -33,12 +33,12 @@ class Tenant(db.Model, SerializerMixin):
 class House(db.Model, SerializerMixin):
     __tablename__ = 'houses'
     id = db.Column(db.Integer, primary_key=True)
-    number_of_rooms = db.Column(db.Integer, nullable=False)
-    categories = db.Column(db.String, nullable=False)
-    location = db.Column(db.String, nullable=False)
-    price = db.Column(db.Integer, nullable=False)
-    description = db.Column(db.String, nullable=False)
-    rating = db.Column(db.Float, nullable=False)
+    number_of_rooms = db.Column(db.Integer)
+    categories = db.Column(db.String)
+    location = db.Column(db.String)
+    price = db.Column(db.Integer)
+    description = db.Column(db.String)
+    rating = db.Column(db.Float)
     image_urls = db.Column(db.ARRAY(db.String))
     
     owner_id = db.Column(db.Integer, db.ForeignKey('owners.id'))

@@ -8,7 +8,7 @@ def create_owners(num_owners):
     for i in range(num_owners):
         first_name = f'OwnerFirstName{i}'
         last_name = f'OwnerLastName{i}'
-        email = f'owner{i}_{random.randint(1000, 9999)}@example.com'  # Adding random number to the email
+        email = f'owner{i}_{random.randint(1000, 9999)}@example.com'
         phone_number = f'001-234-567-890{i:02d}'
         password = f'password{i}'
         
@@ -26,7 +26,7 @@ def create_tenants(num_tenants):
     for i in range(num_tenants):
         first_name = f'TenantFirstName{i}'
         last_name = f'TenantLastName{i}'
-        email = f'tenant{i}_{random.randint(1000, 9999)}@example.com'  # Adding random number to the email
+        email = f'tenant{i}_{random.randint(1000, 9999)}@example.com'  
         phone_number = f'001-987-654-321{i:02d}'
         password = f'password{i}'
         
@@ -91,8 +91,8 @@ def create_owner_tenant_relations():
         tenant = random.choice(tenants)
         
         owner_tenant_relation = Owner_Tenant(
-            owner_id=owner.id,  # Use the correct foreign key value
-            tenant_id=tenant.id  # Use the correct foreign key value
+            owner_id=owner.id, 
+            tenant_id=tenant.id  
         )
         db.session.add(owner_tenant_relation)
     db.session.commit()
@@ -105,8 +105,8 @@ def create_tenant_house_relations():
         house = random.choice(houses)
         
         tenant_house_relation = Tenant_House(
-            tenant_id=tenant.id,  # Use the correct foreign key value
-            house_id=house.id  # Use the correct foreign key value
+            tenant_id=tenant.id, 
+            house_id=house.id 
         )
         db.session.add(tenant_house_relation)
     db.session.commit()
