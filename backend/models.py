@@ -1,6 +1,6 @@
 from flask import Flask
 from sqlalchemy_serializer import SerializerMixin
-from
+from app import db
 
 class Owner(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key= True)
@@ -11,5 +11,5 @@ class Owner(db.Model, SerializerMixin):
     password = db.Column(db.String)
     
     def __repr__(self):
-        return f'<Owner: {first_name} {last_name}'
+        return f'<Owner: {self.first_name} {self.last_name}>'
     
