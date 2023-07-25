@@ -1,21 +1,33 @@
-from flask import Flask
+from flask import Flask, jsonify, make_response, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_restful import Api
+from flask_restful import Api, Resource
 from flask_cors import CORS
 from config import Config
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import IntegrityError
 
-app = Flask(__name__)
-app.config.from_object(Config)
-db = SQLAlchemy(app)
+db = SQLAlchemy()
+migrate = Migrate()
+api = Api()
 
-migrate = Migrate(app, db)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
+    CORS(app)
 
-api = Api(app)
+    db.init_app(app)
+    migrate.init_app(app, db)
+    api.init_app(app)
 
+
+    return app
 
 
 if __name__ == '__main__':
     app.run()
+
+
+
+
+
 
