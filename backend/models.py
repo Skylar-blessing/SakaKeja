@@ -1,5 +1,7 @@
 from app import db
 from sqlalchemy_serializer import SerializerMixin
+from sqlalchemy.orm import validates
+
 
 class Owner(db.Model, SerializerMixin):
     __tablename__ = 'owners'
@@ -16,6 +18,30 @@ class Owner(db.Model, SerializerMixin):
     
     def __repr__(self):
         return f'<Owner: {self.first_name} {self.last_name}>'
+    
+    @validates('email')
+    def validate_email(self, key, email):
+        # Custom email validation to ensure it ends with "@sakakeja.com"
+        if not email.endswith('@sakakeja.com'):
+            raise ValueError('Email must end with @sakakeja.com')
+        return email
+
+    @validates('password')
+    def validate_password(self, key, password):
+        # Custom password validation
+        if len(password) < 8:
+            raise ValueError('Password must be at least 8 characters long')
+        
+        if not any(char.isdigit() for char in password):
+            raise ValueError('Password must contain at least one digit')
+        
+        if not any(char.isupper() for char in password):
+            raise ValueError('Password must contain at least one uppercase letter')
+        
+        if not any(char in '!@#$%^&*()-_=+[]{}|;:,.<>?/~`' for char in password):
+            raise ValueError('Password must contain at least one special character')
+        
+        return password
 
 class Tenant(db.Model, SerializerMixin):
     __tablename__ = 'tenants'
@@ -31,6 +57,28 @@ class Tenant(db.Model, SerializerMixin):
     
     def __repr__(self):
         return f'<Tenant: {self.first_name} {self.last_name}>'
+    
+    @validates('email')
+    def validate_email(self, key, email):
+        if '@' not in email:
+            raise ValueError('Email must contain the @ symbol')
+        return email
+
+    @validates('password')
+    def validate_password(self, key, password):
+        if len(password) < 8:
+            raise ValueError('Password must be at least 8 characters long')
+        
+        if not any(char.isdigit() for char in password):
+            raise ValueError('Password must contain at least one digit')
+        
+        if not any(char.isupper() for char in password):
+            raise ValueError('Password must contain at least one uppercase letter')
+        
+        if not any(char in '!@#$%^&*()-_=+[]{}|;:,.<>?/~`' for char in password):
+            raise ValueError('Password must contain at least one special character')
+        
+        return password
 
 class House(db.Model, SerializerMixin):
     __tablename__ = 'houses'

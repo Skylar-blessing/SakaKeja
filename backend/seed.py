@@ -1,17 +1,24 @@
 import random
-from flask import Flask
+import string
 from app import db, create_app
 from models import Owner, Tenant, House, Review, Owner_Tenant, Tenant_House
+
 app = create_app()
+
+def generate_random_password():
+    while True:
+        password_chars = random.choices(string.ascii_letters + string.digits + string.punctuation, k=8)
+        if any(char.isupper() for char in password_chars) and any(char.isdigit() for char in password_chars):
+            return ''.join(password_chars)
 
 def create_owners(num_owners):
     for i in range(num_owners):
         first_name = f'OwnerFirstName{i}'
         last_name = f'OwnerLastName{i}'
-        email = f'owner{i}_{random.randint(1000, 9999)}@example.com'  
+        email = f'owner{i}_{random.randint(1000, 9999)}@sakakeja.com'
         phone_number = f'001-234-567-890{i:02d}'
-        password = f'password{i}'
-        
+        password = generate_random_password()
+
         owner = Owner(
             first_name=first_name,
             last_name=last_name,
@@ -26,10 +33,10 @@ def create_tenants(num_tenants):
     for i in range(num_tenants):
         first_name = f'TenantFirstName{i}'
         last_name = f'TenantLastName{i}'
-        email = f'tenant{i}_{random.randint(1000, 9999)}@example.com'  
+        email = f'tenant{i}_{random.randint(1000, 9999)}@example.com'
         phone_number = f'001-987-654-321{i:02d}'
-        password = f'password{i}'
-        
+        password = generate_random_password()
+
         tenant = Tenant(
             first_name=first_name,
             last_name=last_name,
@@ -53,7 +60,7 @@ def create_houses(num_houses):
             f'https://example.com/image{i}_2.jpg',
             f'https://example.com/image{i}_3.jpg'
         ]
-        
+
         house = House(
             number_of_rooms=number_of_rooms,
             categories=categories,
@@ -69,12 +76,12 @@ def create_houses(num_houses):
 def create_reviews(num_reviews):
     tenants = Tenant.query.all()
     houses = House.query.all()
-    
+
     for i in range(num_reviews):
         tenant = random.choice(tenants)
         house = random.choice(houses)
         review_text = f'Review {i} for House {house.id} by Tenant {tenant.id}'
-        
+
         review = Review(
             reviews=review_text,
             house=house,
@@ -86,10 +93,10 @@ def create_reviews(num_reviews):
 def create_owner_tenant_relations():
     owners = Owner.query.all()
     tenants = Tenant.query.all()
-    
+
     for owner in owners:
         tenant = random.choice(tenants)
-        
+
         owner_tenant_relation = Owner_Tenant(
             owner_id=owner.id, 
             tenant_id=tenant.id  
@@ -100,10 +107,10 @@ def create_owner_tenant_relations():
 def create_tenant_house_relations():
     tenants = Tenant.query.all()
     houses = House.query.all()
-    
+
     for tenant in tenants:
         house = random.choice(houses)
-        
+
         tenant_house_relation = Tenant_House(
             tenant_id=tenant.id,  
             house_id=house.id  
@@ -117,17 +124,15 @@ def initialize_database():
 
 if __name__ == '__main__':
     initialize_database()
-    
-    with app.app_context():
-        num_owners = 10
-        num_tenants = 10
-        num_houses = 10
-        num_reviews = 10
 
-        create_owners(num_owners)
-        create_tenants(num_tenants)
-        create_houses(num_houses)
-        create_reviews(num_reviews)
-        create_owner_tenant_relations()
-        create_tenant_house_relations()
-        
+    num_owners = 10
+    num_tenants = 10
+    num_houses = 10
+    num_reviews = 10
+
+    create_owners(num_owners)
+    create_tenants(num_tenants)
+    create_houses(num_houses)
+    create_reviews(num_reviews)
+    create_owner_tenant_relations()
+    create_tenant_house_relations()
