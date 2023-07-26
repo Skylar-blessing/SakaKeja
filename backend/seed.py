@@ -130,3 +130,4 @@ if __name__ == '__main__':
         create_reviews(num_reviews)
         create_owner_tenant_relations()
         create_tenant_house_relations()
+        
