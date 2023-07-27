@@ -20,7 +20,7 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     api.init_app(app)
-
+    
     class Index(Resource):
         def get(self):
             response_dict = {
@@ -167,7 +167,7 @@ def create_app():
                 categories=request.form['categories'],
                 location=request.form['location'],
                 price=request.form['price'],
-                description=request.form['description']
+                description=request.form['description'],
                 rating=request.form['rating'],
                 image_urls=request.form['image_urls']
             )
@@ -275,11 +275,8 @@ def create_app():
             )
             return response
 
-    api.add_resource(Review_by_Id, "/houses/<int:id>")
-    
-    
-    
-    
+    api.add_resource(Review_by_Id, "/reviews/<int:id>")
+
     class Owners_Tenants(Resource):
         def get(self):
             owners_tenants = [owner_tenant.to_dict() for owner_tenant in Owner_Tenant.query.all()]
@@ -392,13 +389,13 @@ def create_app():
             )
             return response
 
-    api.add_resource(Tenant_House_by_Id, "/tenant_houses/<int:id>")
+    api.add_resource(Tenant_House_by_Id, "/tenants_houses/<int:id>")
     
 
     return app
 
 if __name__ == '__main__':
     app = create_app()
-    app.debug = True  # Enable debug mode
-    app.run()
+    app.run(debug=True)
+
 
