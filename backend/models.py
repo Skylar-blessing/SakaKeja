@@ -1,94 +1,44 @@
 from app import db
 from sqlalchemy_serializer import SerializerMixin
-from sqlalchemy.orm import validates
-
 
 class Owner(db.Model, SerializerMixin):
     __tablename__ = 'owners'
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(100), nullable=False)
-    last_name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    phone_number = db.Column(db.String(20), nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    first_name = db.Column(db.String(100))
+    last_name = db.Column(db.String(100))
+    email = db.Column(db.String(120))
+    phone_number = db.Column(db.String(20))
+    password = db.Column(db.String(100))
     
     houses = db.relationship("House", backref="owner")
     
-    houses = db.relationship("House", backref= "owner")
-    
     def __repr__(self):
         return f'<Owner: {self.first_name} {self.last_name}>'
-    
-    @validates('email')
-    def validate_email(self, key, email):
-        # Custom email validation to ensure it ends with "@sakakeja.com"
-        if not email.endswith('@sakakeja.com'):
-            raise ValueError('Email must end with @sakakeja.com')
-        return email
-
-    @validates('password')
-    def validate_password(self, key, password):
-        # Custom password validation
-        if len(password) < 8:
-            raise ValueError('Password must be at least 8 characters long')
-        
-        if not any(char.isdigit() for char in password):
-            raise ValueError('Password must contain at least one digit')
-        
-        if not any(char.isupper() for char in password):
-            raise ValueError('Password must contain at least one uppercase letter')
-        
-        if not any(char in '!@#$%^&*()-_=+[]{}|;:,.<>?/~`' for char in password):
-            raise ValueError('Password must contain at least one special character')
-        
-        return password
 
 class Tenant(db.Model, SerializerMixin):
     __tablename__ = 'tenants'
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(100), nullable=False)
-    last_name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    phone_number = db.Column(db.String(20), nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    first_name = db.Column(db.String(100))
+    last_name = db.Column(db.String(100))
+    email = db.Column(db.String(120))
+    phone_number = db.Column(db.String(20))
+    password = db.Column(db.String(100))
     
     houses = db.relationship("House", backref="tenant")
     reviews = db.relationship("Review", backref="tenant")
     
     def __repr__(self):
         return f'<Tenant: {self.first_name} {self.last_name}>'
-    
-    @validates('email')
-    def validate_email(self, key, email):
-        if '@' not in email:
-            raise ValueError('Email must contain the @ symbol')
-        return email
-
-    @validates('password')
-    def validate_password(self, key, password):
-        if len(password) < 8:
-            raise ValueError('Password must be at least 8 characters long')
-        
-        if not any(char.isdigit() for char in password):
-            raise ValueError('Password must contain at least one digit')
-        
-        if not any(char.isupper() for char in password):
-            raise ValueError('Password must contain at least one uppercase letter')
-        
-        if not any(char in '!@#$%^&*()-_=+[]{}|;:,.<>?/~`' for char in password):
-            raise ValueError('Password must contain at least one special character')
-        
-        return password
 
 class House(db.Model, SerializerMixin):
     __tablename__ = 'houses'
     id = db.Column(db.Integer, primary_key=True)
-    number_of_rooms = db.Column(db.Integer, nullable=False)
-    categories = db.Column(db.String, nullable=False)
-    location = db.Column(db.String, nullable=False)
-    price = db.Column(db.Integer, nullable=False)
-    description = db.Column(db.String, nullable=False)
-    rating = db.Column(db.Float, nullable=False)
+    number_of_rooms = db.Column(db.Integer)
+    categories = db.Column(db.String)
+    location = db.Column(db.String)
+    price = db.Column(db.Integer)
+    description = db.Column(db.String)
+    rating = db.Column(db.Float)
     image_urls = db.Column(db.ARRAY(db.String))
     
     owner_id = db.Column(db.Integer, db.ForeignKey('owners.id'))
