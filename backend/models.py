@@ -2,6 +2,7 @@ from sqlalchemy_serializer import SerializerMixin
 from app import db
 from sqlalchemy.orm import validates
 import re
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(db.Model, SerializerMixin):
@@ -33,21 +34,39 @@ class User(db.Model, SerializerMixin):
     def __repr__(self):
         return f'<User: {self.first_name} {self.last_name}>'
     
-    @validates('password')
-    def validate_password(self, key, password):
+    @staticmethod
+    def validate_password(password):
         if len(password) < 8:
             raise ValueError("Password must be at least 8 characters long.")
 
-        if not re.search(r'[A-Z]', password):
+        if not any(char.isupper() for char in password):
             raise ValueError("Password must contain at least one uppercase letter.")
 
-        if not re.search(r'\d', password):
+        if not any(char.isdigit() for char in password):
             raise ValueError("Password must contain at least one digit.")
 
-        if not re.search(r'[!@#$%^&*()-=_+[\]{}|;:,.<>?]', password):
+        if not any(char in '!@#$%^&*()-=_+[]{}|;:,.<>?' for char in password):
             raise ValueError("Password must contain at least one special character.")
 
-        return password
+    @classmethod
+    def create(cls, first_name, last_name, email, phone_number, password, user_type):
+        cls.validate_password(password)
+
+        hashed_password = generate_password_hash(password)
+        print(f"Hashed password: {hashed_password}") 
+
+        new_user = cls(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            phone_number=phone_number,
+            password=hashed_password,
+            user_type=user_type
+        )
+        db.session.add(new_user)
+        db.session.commit()
+
+        return new_user
     
 class Property(db.Model, SerializerMixin):
     __tablename__ = 'properties'

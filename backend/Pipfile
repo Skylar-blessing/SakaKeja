@@ -13,6 +13,8 @@ flask-sqlalchemy = "*"
 flask = "*"
 faker = "*"
 flask-seeder = "*"
+pyjwt = "*"
+werkzeug = "*"
 
 [dev-packages]
 

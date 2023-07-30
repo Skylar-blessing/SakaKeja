@@ -4,6 +4,10 @@ from flask_migrate import Migrate
 from flask_restful import Api, Resource
 from flask_cors import CORS
 from config import Config
+import jwt
+import datetime
+import logging
+from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -13,14 +17,76 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 api = Api(app)
 
-
 from models import User, Payment, Property, MoveAssistance, Review
+
+app.config['SECRET_KEY'] = 'saka-keja-key'
+
+def create_token(user_id, user_type):
+    payload = {
+        'user_id': user_id,
+        'user_type': user_type,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1) 
+    }
+    token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
+    return token
+
+def verify_token():
+    token = request.headers.get('Authorization')
+
+    if not token:
+        return make_response(jsonify({"error": "Authorization token not provided"}), 401)
+
+    try:
+        payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        request.user_id = payload['user_id']
+        request.user_type = payload['user_type']
+    except jwt.ExpiredSignatureError:
+        return make_response(jsonify({"error": "Token has expired"}), 401)
+    except jwt.InvalidTokenError:
+        return make_response(jsonify({"error": "Invalid token"}), 401)
+
+    return None
 
 class IndexResource(Resource):
     def get(self):
         return {'message': 'Karibu sakakeja'}
 
 api.add_resource(IndexResource, '/')
+
+class Login(Resource):
+    @staticmethod
+    def post():
+        data = request.get_json()
+        email = data['email']
+        password = data['password']
+
+        print(f"Received login request for email: {email}")
+
+        user = User.query.filter_by(email=email).first()
+
+        if user is None:
+            print(f"No user found with email: {email}")
+            return make_response(jsonify({"error": "Invalid email or password"}), 401)
+
+        print(f"Found user with email: {email}, id: {user.id}")
+
+        try:
+            User.validate_password(password)
+        except ValueError as e:
+            print(f"Invalid password format for user with email: {email}, id: {user.id}")
+            return make_response(jsonify({"error": str(e)}), 401)
+
+        if not check_password_hash(user.password, password):
+            print(f"Invalid password for user with email: {email}, id: {user.id}")
+            return make_response(jsonify({"error": "Invalid email or password"}), 401)
+
+        print(f"Successful login for user with email: {email}, id: {user.id}")
+
+        token = create_token(user.id, user.user_type)
+
+        return make_response(jsonify({"token": token}), 200)
+
+api.add_resource(Login, "/login")
 
 class Users(Resource):
     def get(self):
@@ -29,14 +95,24 @@ class Users(Resource):
 
     def post(self):
         data = request.get_json()
+        email = data['email']
+
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            return make_response(jsonify({"error": "Email already exists"}), 400)
+
         new_user = User(
             first_name=data['first_name'],
             last_name=data['last_name'],
-            email=data['email'],
+            email=email,
             phone_number=data['phone_number'],
             password=data['password'],
             user_type=data['user_type']
         )
+
+        hashed_password = generate_password_hash(data['password'])
+        print(f"Hashed password: {hashed_password}")
+
         db.session.add(new_user)
         db.session.commit()
 
@@ -44,7 +120,6 @@ class Users(Resource):
         response = make_response(jsonify(response_dict), 201)
 
         return response
-
 api.add_resource(Users, "/users")
 
 class User_by_Id(Resource):
