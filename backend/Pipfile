@@ -15,6 +15,7 @@ faker = "*"
 flask-seeder = "*"
 pyjwt = "*"
 werkzeug = "*"
+flask-jwt-extended = "*"
 
 [dev-packages]
 

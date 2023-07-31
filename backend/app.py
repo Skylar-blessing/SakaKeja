@@ -8,6 +8,7 @@ import jwt
 import datetime
 import logging
 from werkzeug.security import check_password_hash, generate_password_hash
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -17,6 +18,9 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 api = Api(app)
 
+jwt_manager = JWTManager(app)
+
+
 from models import User, Payment, Property, MoveAssistance, Review
 
 app.config['SECRET_KEY'] = 'saka-keja-key'
@@ -25,7 +29,7 @@ def create_token(user_id, user_type):
     payload = {
         'user_id': user_id,
         'user_type': user_type,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1) 
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1)
     }
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
     return token
@@ -34,28 +38,21 @@ def verify_token():
     token = request.headers.get('Authorization')
 
     if not token:
-        return make_response(jsonify({"error": "Authorization token not provided"}), 401)
+        return False, {"error": "Authorization token not provided"}
 
     try:
         payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
         request.user_id = payload['user_id']
         request.user_type = payload['user_type']
     except jwt.ExpiredSignatureError:
-        return make_response(jsonify({"error": "Token has expired"}), 401)
+        return False, {"error": "Token has expired"}
     except jwt.InvalidTokenError:
-        return make_response(jsonify({"error": "Invalid token"}), 401)
+        return False, {"error": "Invalid token"}
 
-    return None
-
-class IndexResource(Resource):
-    def get(self):
-        return {'message': 'Karibu sakakeja'}
-
-api.add_resource(IndexResource, '/')
+    return True, None
 
 class Login(Resource):
-    @staticmethod
-    def post():
+    def post(self):
         data = request.get_json()
         email = data['email']
         password = data['password']
@@ -78,20 +75,58 @@ class Login(Resource):
 
         if not check_password_hash(user.password, password):
             print(f"Invalid password for user with email: {email}, id: {user.id}")
-            return make_response(jsonify({"error": "Invalid email or password"}), 401)
+            token = create_access_token(identity=user.id)
+            print(f" token: {token}")
+            
 
+            return make_response(jsonify({user.user_type: token}), 200)
+    
         print(f"Successful login for user with email: {email}, id: {user.id}")
 
-        token = create_token(user.id, user.user_type)
+        token = create_access_token(identity=user.id)
 
         return make_response(jsonify({"token": token}), 200)
 
 api.add_resource(Login, "/login")
 
+class ProtectedResource(Resource):
+    @jwt_required()
+    def get(self):
+        current_user_id = get_jwt_identity()
+        user = User.query.get(current_user_id)
+        return make_response(jsonify({"user": user.to_dict()}), 200)
+
+api.add_resource(ProtectedResource, '/protected')
+
+class IndexResource(Resource):
+    def get(self):
+        return {'message': 'Karibu sakakeja'}
+
+api.add_resource(IndexResource, '/')
+
+DEFAULT_PAGE_SIZE = 10
+
 class Users(Resource):
     def get(self):
-        users = [user.to_dict() for user in User.query.all()]
-        return make_response(jsonify(users), 200)
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', DEFAULT_PAGE_SIZE))
+
+        offset = (page - 1) * per_page
+
+        users = User.query.offset(offset).limit(per_page).all()
+
+        total_items = User.query.count()
+        total_pages = (total_items + per_page - 1) // per_page
+
+        response = {
+            'page': page,
+            'per_page': per_page,
+            'total_items': total_items,
+            'total_pages': total_pages,
+            'data': [user.to_dict() for user in users],
+        }
+
+        return make_response(jsonify(response), 200)
 
     def post(self):
         data = request.get_json()
@@ -165,8 +200,25 @@ api.add_resource(User_by_Id, "/users/<int:id>")
 
 class Properties(Resource):
     def get(self):
-        properties = [property.to_dict() for property in Property.query.all()]
-        return make_response(jsonify(properties), 200)
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', DEFAULT_PAGE_SIZE))
+
+        offset = (page - 1) * per_page
+
+        properties = Property.query.offset(offset).limit(per_page).all()
+
+        total_items = Property.query.count()
+        total_pages = (total_items + per_page - 1) // per_page
+
+        response = {
+            'page': page,
+            'per_page': per_page,
+            'total_items': total_items,
+            'total_pages': total_pages,
+            'data': [property.to_dict() for property in properties],
+        }
+
+        return make_response(jsonify(response), 200)
 
     def post(self):
         data = request.get_json()
@@ -233,26 +285,42 @@ api.add_resource(Property_by_Id, "/properties/<int:id>")
 
 class Payments(Resource):
     def get(self):
-        payments = [payment.to_dict() for payment in Payment.query.all()]
-        return make_response(jsonify(payments), 200)
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', DEFAULT_PAGE_SIZE))
 
+        offset = (page - 1) * per_page
+
+        payments = Payment.query.offset(offset).limit(per_page).all()
+
+        total_items = Payment.query.count()
+        total_pages = (total_items + per_page - 1) // per_page
+
+        response = {
+            'page': page,
+            'per_page': per_page,
+            'total_items': total_items,
+            'total_pages': total_pages,
+            'data': [payment.to_dict() for payment in payments],
+        }
+
+        return make_response(jsonify(response), 200)
+    
     def post(self):
-        data = request.get_json()
-        new_payment = Payment(
-            amount=data['amount'],
-            payment_date=data['payment_date'],
-            status=data['status'],
-            tenant_id=data['tenant_id'],
-            property_id=data['property_id']
-        )
-        db.session.add(new_payment)
-        db.session.commit()
+            data = request.get_json()
+            new_payment = Payment(
+                amount=data['amount'],
+                payment_date=data['payment_date'],
+                status=data['status'],
+                tenant_id=data['tenant_id'],
+                property_id=data['property_id']
+            )
+            db.session.add(new_payment)
+            db.session.commit()
 
-        response_dict = new_payment.to_dict()
-        response = make_response(jsonify(response_dict), 201)
+            response_dict = new_payment.to_dict()
+            response = make_response(jsonify(response_dict), 201)
 
-        return response
-
+            return response
 api.add_resource(Payments, "/payments")
 
 class Payment_by_Id(Resource):
@@ -298,8 +366,25 @@ api.add_resource(Payment_by_Id, "/payments/<int:id>")
 
 class MoveAssistances(Resource):
     def get(self):
-        move_assistances = [move.to_dict() for move in MoveAssistance.query.all()]
-        return make_response(jsonify(move_assistances), 200)
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', DEFAULT_PAGE_SIZE))
+
+        offset = (page - 1) * per_page
+
+        move_assistances = MoveAssistance.query.offset(offset).limit(per_page).all()
+
+        total_items = MoveAssistance.query.count()
+        total_pages = (total_items + per_page - 1) // per_page
+
+        response = {
+            'page': page,
+            'per_page': per_page,
+            'total_items': total_items,
+            'total_pages': total_pages,
+            'data': [move.to_dict() for move in move_assistances],
+        }
+
+        return make_response(jsonify(response), 200)
 
     def post(self):
         data = request.get_json()
@@ -361,8 +446,25 @@ api.add_resource(MoveAssistance_by_Id, "/move_assistances/<int:id>")
 
 class Reviews(Resource):
     def get(self):
-        reviews = [review.to_dict() for review in Review.query.all()]
-        return make_response(jsonify(reviews), 200)
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', DEFAULT_PAGE_SIZE))
+
+        offset = (page - 1) * per_page
+
+        reviews = Review.query.offset(offset).limit(per_page).all()
+
+        total_items = Review.query.count()
+        total_pages = (total_items + per_page - 1) // per_page
+
+        response = {
+            'page': page,
+            'per_page': per_page,
+            'total_items': total_items,
+            'total_pages': total_pages,
+            'data': [review.to_dict() for review in reviews],
+        }
+
+        return make_response(jsonify(response), 200)
 
     def post(self):
         data = request.get_json()
@@ -426,4 +528,3 @@ api.add_resource(Review_by_Id, "/reviews/<int:id>")
 
 if __name__ == '__main__':
     app.run(debug=True)
-

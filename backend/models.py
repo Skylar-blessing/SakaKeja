@@ -13,13 +13,11 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String(120))
     phone_number = db.Column(db.String(50))
     password = db.Column(db.String(100))
-    user_type = db.Column(db.String(20))
+    user_type = db.Column(db.String(20), nullable=False)
 
     properties_owned = db.relationship("Property", backref="owner", lazy="select")
     payments_made = db.relationship("Payment", backref="tenant", lazy="select")
-    move_assistance_requests = db.relationship(
-        "MoveAssistance", backref="tenant", lazy="select", cascade="all, delete-orphan"
-    )
+    move_assistance_requests = db.relationship("MoveAssistance", backref="tenant", lazy="select")
     reviews_written = db.relationship("Review", backref="tenant", lazy="select")
 
     def to_dict(self):
@@ -130,7 +128,7 @@ class MoveAssistance(db.Model, SerializerMixin):
     service_details = db.Column(db.String)
     status = db.Column(db.String(20))
     
-    tenant_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     def to_dict(self):
         return {
