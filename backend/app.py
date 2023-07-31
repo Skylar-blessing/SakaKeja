@@ -107,13 +107,29 @@ class IndexResource(Resource):
 
 api.add_resource(IndexResource, '/')
 
-
-
+DEFAULT_PAGE_SIZE = 10
 
 class Users(Resource):
     def get(self):
-        users = [user.to_dict() for user in User.query.all()]
-        return make_response(jsonify(users), 200)
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', DEFAULT_PAGE_SIZE))
+
+        offset = (page - 1) * per_page
+
+        users = User.query.offset(offset).limit(per_page).all()
+
+        total_items = User.query.count()
+        total_pages = (total_items + per_page - 1) // per_page
+
+        response = {
+            'page': page,
+            'per_page': per_page,
+            'total_items': total_items,
+            'total_pages': total_pages,
+            'data': [user.to_dict() for user in users],
+        }
+
+        return make_response(jsonify(response), 200)
 
     def post(self):
         data = request.get_json()
@@ -187,8 +203,25 @@ api.add_resource(User_by_Id, "/users/<int:id>")
 
 class Properties(Resource):
     def get(self):
-        properties = [property.to_dict() for property in Property.query.all()]
-        return make_response(jsonify(properties), 200)
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', DEFAULT_PAGE_SIZE))
+
+        offset = (page - 1) * per_page
+
+        properties = Property.query.offset(offset).limit(per_page).all()
+
+        total_items = Property.query.count()
+        total_pages = (total_items + per_page - 1) // per_page
+
+        response = {
+            'page': page,
+            'per_page': per_page,
+            'total_items': total_items,
+            'total_pages': total_pages,
+            'data': [property.to_dict() for property in properties],
+        }
+
+        return make_response(jsonify(response), 200)
 
     def post(self):
         data = request.get_json()
@@ -255,8 +288,28 @@ api.add_resource(Property_by_Id, "/properties/<int:id>")
 
 class Payments(Resource):
     def get(self):
-        payments = [payment.to_dict() for payment in Payment.query.all()]
-        return make_response(jsonify(payments), 200)
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', DEFAULT_PAGE_SIZE))
+
+        offset = (page - 1) * per_page
+
+        payments = Payment.query.offset(offset).limit(per_page).all()
+
+        total_items = Payment.query.count()
+        total_pages = (total_items + per_page - 1) // per_page
+
+        response = {
+            'page': page,
+            'per_page': per_page,
+            'total_items': total_items,
+            'total_pages': total_pages,
+            'data': [payment.to_dict() for payment in payments],
+        }
+
+        return make_response(jsonify(response), 200)
+
+
+# api.add_resource(Payments, "/payments")
 
     def post(self):
         data = request.get_json()
@@ -320,8 +373,25 @@ api.add_resource(Payment_by_Id, "/payments/<int:id>")
 
 class MoveAssistances(Resource):
     def get(self):
-        move_assistances = [move.to_dict() for move in MoveAssistance.query.all()]
-        return make_response(jsonify(move_assistances), 200)
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', DEFAULT_PAGE_SIZE))
+
+        offset = (page - 1) * per_page
+
+        move_assistances = MoveAssistance.query.offset(offset).limit(per_page).all()
+
+        total_items = MoveAssistance.query.count()
+        total_pages = (total_items + per_page - 1) // per_page
+
+        response = {
+            'page': page,
+            'per_page': per_page,
+            'total_items': total_items,
+            'total_pages': total_pages,
+            'data': [move.to_dict() for move in move_assistances],
+        }
+
+        return make_response(jsonify(response), 200)
 
     def post(self):
         data = request.get_json()
@@ -383,8 +453,25 @@ api.add_resource(MoveAssistance_by_Id, "/move_assistances/<int:id>")
 
 class Reviews(Resource):
     def get(self):
-        reviews = [review.to_dict() for review in Review.query.all()]
-        return make_response(jsonify(reviews), 200)
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', DEFAULT_PAGE_SIZE))
+
+        offset = (page - 1) * per_page
+
+        reviews = Review.query.offset(offset).limit(per_page).all()
+
+        total_items = Review.query.count()
+        total_pages = (total_items + per_page - 1) // per_page
+
+        response = {
+            'page': page,
+            'per_page': per_page,
+            'total_items': total_items,
+            'total_pages': total_pages,
+            'data': [review.to_dict() for review in reviews],
+        }
+
+        return make_response(jsonify(response), 200)
 
     def post(self):
         data = request.get_json()
