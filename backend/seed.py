@@ -1,7 +1,7 @@
 import random
 import string
 from faker import Faker
-from app import create_app, db
+from app import app, db
 from models import User, Property, Payment, MoveAssistance, Review
 
 fake = Faker()
@@ -12,16 +12,15 @@ def generate_random_password():
         if any(char.isupper() for char in password) and any(char.isdigit() for char in password) and any(char in string.punctuation for char in password):
             return password
 
-app = create_app()
 
 def seed_users():
-    for _ in range(10):
+    for _ in range(70):
         first_name = fake.first_name()
         last_name = fake.last_name()
         email = fake.email()
         phone_number = fake.phone_number()
         password = generate_random_password()
-        user_type = random.choice(['owner', 'tenant'])[:20]  
+        user_type = random.choice(['owner', 'tenant', 'admin'])[:20]  
         user = User(first_name=first_name, last_name=last_name, email=email,
                     phone_number=phone_number, password=password, user_type=user_type)
         db.session.add(user)
@@ -29,7 +28,7 @@ def seed_users():
 
 def seed_properties():
     users = User.query.all()
-    for _ in range(10):
+    for _ in range(60):
         owner = random.choice(users)
         number_of_rooms = fake.random_int(min=1, max=10)
         categories = ' '.join(fake.words(nb=3))
@@ -47,7 +46,7 @@ def seed_properties():
 def seed_payments():
     users = User.query.filter_by(user_type='tenant').all()
     properties = Property.query.all()
-    for _ in range(20):
+    for _ in range(50):
         tenant = random.choice(users)
         property = random.choice(properties)
         amount = fake.random_int(min=100, max=1000)
@@ -71,7 +70,7 @@ def seed_move_assistance():
 def seed_reviews():
     users = User.query.filter_by(user_type='tenant').all()
     properties = Property.query.all()
-    for _ in range(10):
+    for _ in range(70):
         tenant = random.choice(users)
         property = random.choice(properties)
         review_text = fake.paragraph()
