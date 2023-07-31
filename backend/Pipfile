@@ -13,6 +13,8 @@ flask-sqlalchemy = "*"
 flask = "*"
 faker = "*"
 psycopg2 = "*"
+migrate = "*"
+flask-jwt-extended = "*"
 
 [dev-packages]
 
