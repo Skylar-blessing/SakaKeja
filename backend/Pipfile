@@ -16,6 +16,8 @@ flask-seeder = "*"
 pyjwt = "*"
 werkzeug = "*"
 flask-jwt-extended = "*"
+flask-restplus = "*"
+flask-restx = "*"
 
 [dev-packages]
 
