@@ -17,6 +17,9 @@ migrate = "*"
 flask-jwt-extended = "*"
 flask-restplus = "*"
 flask-restx = "*"
+sendgrid = "*"
+cloudinary = "*"
+pillow = "*"
 
 [dev-packages]
 

@@ -7,6 +7,9 @@ from config import Config
 import jwt
 import datetime
 import logging
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 
@@ -22,6 +25,33 @@ jwt_manager = JWTManager(app)
 
 
 from models import User, Payment, Property, MoveAssistance, Review
+
+SENDGRID_API_KEY = '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'
+
+#Email Function
+def send_email(to_email, subject, content):
+    message = Mail(
+        from_email='skylarblessings5@gmail.com',
+        to_emails=to_email,
+        subject=subject,
+        html_content=content
+    )
+
+    try:
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+    except Exception as e:
+        print(e)
+
+recipient_email = 'recipient@example.com'
+email_subject = 'Test Email'
+email_content = '<p>This is a test email sent using SendGrid.</p>'
+
+send_email(recipient_email, email_subject, email_content)
+
 
 # Models for request parsing and response marshalling
 login_parser = api.parser()
@@ -105,7 +135,6 @@ def verify_token():
 
     return True, None
 
-
 # Define the route for user login and generating JWT token
 @api.route('/login')
 class Login(Resource):
@@ -166,6 +195,7 @@ api.add_resource(IndexResource, '/')
 DEFAULT_PAGE_SIZE = 10
 
 # Route for getting all users and creating a new user
+
 @api.route('/users')
 class Users(Resource):
     @api.doc(description='Get a list of all users')
@@ -218,7 +248,6 @@ class Users(Resource):
         response = make_response(jsonify(response_dict), 201)
 
         return response
-
 # Route for getting, updating, and deleting a specific user by ID
 @api.route('/users/<int:id>')
 
