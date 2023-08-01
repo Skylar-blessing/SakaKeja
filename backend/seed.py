@@ -33,7 +33,7 @@ def seed_properties():
         number_of_rooms = fake.random_int(min=1, max=10)
         categories = ' '.join(fake.words(nb=3))
         location = fake.address()
-        price = fake.random_int(min=500, max=5000)
+        price = fake.random_int(min=20000, max=100000)
         description = fake.paragraph()
         rating = round(random.uniform(1.0, 5.0), 1)
         image_urls = [fake.image_url() for _ in range(3)]
@@ -49,7 +49,7 @@ def seed_payments():
     for _ in range(50):
         tenant = random.choice(users)
         property = random.choice(properties)
-        amount = fake.random_int(min=100, max=1000)
+        amount = fake.random_int(min=20000, max=100000)
         payment_date = fake.date_between(start_date='-1y', end_date='today')
         status = random.choice(['paid', 'pending', 'failed'])
         payment = Payment(tenant=tenant, property=property, amount=amount,

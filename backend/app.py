@@ -107,7 +107,7 @@ class IndexResource(Resource):
 
 api.add_resource(IndexResource, '/')
 
-DEFAULT_PAGE_SIZE = 10
+DEFAULT_PAGE_SIZE = 10 #for pagination
 
 class Users(Resource):
     def get(self):
@@ -308,8 +308,6 @@ class Payments(Resource):
 
         return make_response(jsonify(response), 200)
 
-
-# api.add_resource(Payments, "/payments")
 
     def post(self):
         data = request.get_json()

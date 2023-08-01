@@ -20,6 +20,7 @@ class User(db.Model, SerializerMixin):
     move_assistance_requests = db.relationship("MoveAssistance", backref="tenant", lazy="select")
     reviews_written = db.relationship("Review", backref="tenant", lazy="select")
 
+# convert the User object into a dictionary representation.
     def to_dict(self):
         return {
             'id': self.id,
@@ -48,6 +49,7 @@ class User(db.Model, SerializerMixin):
         if not any(char in '!@#$%^&*()-=_+[]{}|;:,.<>?' for char in password):
             raise ValueError("Password must contain at least one special character.")
 
+# create a new user object and add it to the database.
     @classmethod
     def create(cls, first_name, last_name, email, phone_number, password, user_type):
         cls.validate_password(password)
@@ -83,6 +85,7 @@ class Property(db.Model, SerializerMixin):
     payments_received = db.relationship("Payment", backref="property", lazy="select")
     reviews_received = db.relationship("Review", backref="property", lazy="select")
 
+# convert Property object into a dictionary representation.
     def to_dict(self):
         return {
             'id': self.id,
