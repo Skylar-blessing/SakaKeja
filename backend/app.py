@@ -140,8 +140,6 @@ def user_type_required(required_type):
 
 @api.route('/login')
 class Login(Resource):
-    # ... other code ...
-
     @api.doc(description='User login and token generation', parser=login_parser)
     def post(self):
         data = request.get_json()
