@@ -142,8 +142,8 @@ class Login(Resource):
             print(f"No user found with email: {email}")
             return make_response(jsonify({"error": "Invalid email or password"}), 401)
 
-        print(f"Stored hashed password: {user.password}")
-        print(f"Provided password: {password}")
+        #print(f"Stored hashed password: {user.password}")
+        #print(f"Provided password: {password}")
 
         if user.password == password:
             print(f"Successful login")
@@ -209,7 +209,7 @@ class Users(Resource):
             last_name=data['last_name'],
             email=email,
             phone_number=data['phone_number'],
-            password=generate_password_hash(data['password']),  # Hash the password before saving
+            password=generate_password_hash(data['password']),  
             user_type=data['user_type']
         )
 
