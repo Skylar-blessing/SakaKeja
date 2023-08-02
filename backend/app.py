@@ -385,6 +385,7 @@ class Property_by_Id(Resource):
 
 # Route for getting all payments and creating a new payment
 @api.route('/payments')
+
 class Payments(Resource):
     @api.doc(description='Get a list of all payments')
     def get(self):
