@@ -1,14 +1,10 @@
 import React from 'react';
-import Header from './Home';
-import Welcome from './Welcome';
-// import Search from './Search';
+import Main from './Main'
 
 const App = () => {
   return (
     <div>
-      <Header />
-      <Welcome />
-      {/* <Search /> */}
+      <Main />
       {/* Other sections/components */}
     </div>
   );
