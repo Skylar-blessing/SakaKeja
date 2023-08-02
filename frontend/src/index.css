@@ -1,0 +1,22 @@
+.search-container {
+    display: flex; /* Use Flexbox to display the components in a row */
+    align-items: center; /* Center items vertically */
+    justify-content: space-between; /* Distribute items evenly along the row */
+    width: 400px; /* Set the width to adjust as needed */
+    margin: 0 auto; /* Center the container horizontally */
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .dropdown,
+  .search-input {
+    flex: 1; /* Allow these components to expand and fill the available space */
+    margin-right: 10px; /* Add some spacing between components */
+  }
+  
+  .filter-icon,
+  .search-icon {
+    margin-left: 10px; /* Add some spacing between components */
+    cursor: pointer; /* Add cursor pointer to indicate interactivity */
+  }
+  
