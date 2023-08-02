@@ -1,0 +1,102 @@
+/* styles.css */
+
+/* Common styles for labels and buttons */
+label {
+    font-family: 'Lily Script One', cursive;
+  }
+  
+  button {
+    background-color: #edf2f7;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  /* Specific styles for the SignUp component */
+  #sign-up-container {
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  #sign-up-container h2 {
+    text-align: center;
+  }
+  
+  #sign-up-container label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  #sign-up-container input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  #sign-up-container select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  #sign-up-container .social-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  /* Specific styles for the Login component */
+  #login-container {
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  #login-container h2 {
+    text-align: center;
+  }
+  
+  #login-container label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  #login-container input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  #login-container button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Google and Apple logo background images */
+  .google-logo {
+    background-image: url('https://i.pinimg.com/564x/7e/a2/a0/7ea2a086cc5082330324a94c52a66531.jpg'); /* Replace with the URL or file path of the Google logo SVG */
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+  }
+  
+  .apple-logo {
+    background-image: url('https://i.pinimg.com/564x/8d/f5/e7/8df5e76136dcba44841002494e01e050.jpg'); /* Replace with the URL or file path of the Apple logo SVG */
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+  }
+  
