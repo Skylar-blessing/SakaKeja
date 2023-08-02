@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
 }
 
 code {
@@ -49,6 +50,13 @@ code {
 }
 
 .App {
+  height: 1000vh;
+  width: 1500px;
+  background: var(--background);
+  color: var(--font-color);
+}
+
+.gif {
   height: 1000vh;
   width: 1500px;
   background: var(--background);
