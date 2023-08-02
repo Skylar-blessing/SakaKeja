@@ -11,6 +11,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 import os
 from functools import wraps
+from flask import g
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
@@ -80,11 +81,12 @@ review_model = api.model('Review', {
 
 def create_token(user_id, user_type):
     payload = {
+        'sub': user_id,
         'user_id': user_id,
         'user_type': user_type,
         'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1)
     }
-    token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
+    token = create_access_token(identity=payload)
     return token
 
 def verify_token():
@@ -95,8 +97,8 @@ def verify_token():
 
     try:
         payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
-        request.user_id = payload['user_id']
-        request.user_type = payload['user_type']
+        g.user_id = payload['user_id']
+        g.user_type = payload['user_type']
     except jwt.ExpiredSignatureError:
         return False, {"error": "Token has expired"}
     except jwt.InvalidTokenError:
@@ -155,9 +157,8 @@ class Login(Resource):
             return make_response(jsonify({"error": "Invalid email or password"}), 401)
 
         print(f"Successful login")
-        access_token = create_access_token(identity=user.id)
+        access_token = create_token(user.id, user.user_type)
         return make_response(jsonify({user.user_type: access_token}), 200)
-
 @api.route('/protected')
 class ProtectedResource(Resource):
     @jwt_required()
