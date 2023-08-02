@@ -7,11 +7,13 @@ from config import Config
 import jwt
 import datetime
 import logging
-import os
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+import os
+from functools import wraps
+from flask import g
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -26,34 +28,6 @@ jwt_manager = JWTManager(app)
 
 from models import User, Payment, Property, MoveAssistance, Review
 
-SENDGRID_API_KEY = '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'
-
-#Email Function
-def send_email(to_email, subject, content):
-    message = Mail(
-        from_email='skylarblessings5@gmail.com',
-        to_emails=to_email,
-        subject=subject,
-        html_content=content
-    )
-
-    try:
-        sg = SendGridAPIClient(SENDGRID_API_KEY)
-        response = sg.send(message)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
-    except Exception as e:
-        print(e)
-
-recipient_email = 'recipient@example.com'
-email_subject = 'Test Email'
-email_content = '<p>This is a test email sent using SendGrid.</p>'
-
-send_email(recipient_email, email_subject, email_content)
-
-
-# Models for request parsing and response marshalling
 login_parser = api.parser()
 login_parser.add_argument('email', type=str, required=True, help='Email address', location='json')
 login_parser.add_argument('password', type=str, required=True, help='Password', location='json')
@@ -69,7 +43,6 @@ user_model = api.model('User', {
     'user_type': fields.String(required=True, description='User type'),
 })
 
-# Model for property
 property_model = api.model('Property', {
     'id': fields.Integer(readonly=True, description='The property identifier'),
     'owner_id': fields.Integer(required=True, description='Owner ID'),
@@ -82,7 +55,6 @@ property_model = api.model('Property', {
     'image_urls': fields.List(fields.String, required=True, description='Image URLs'),
 })
 
-# Model for payment
 payment_model = api.model('Payment', {
     'id': fields.Integer(readonly=True, description='The payment identifier'),
     'amount': fields.Float(required=True, description='Amount'),
@@ -92,7 +64,6 @@ payment_model = api.model('Payment', {
     'property_id': fields.Integer(required=True, description='Property ID'),
 })
 
-# Model for move assistance
 move_assistance_model = api.model('MoveAssistance', {
     'id': fields.Integer(readonly=True, description='The move assistance identifier'),
     'service_details': fields.String(required=True, description='Service details'),
@@ -100,7 +71,6 @@ move_assistance_model = api.model('MoveAssistance', {
     'tenant_id': fields.Integer(required=True, description='Tenant ID'),
 })
 
-# Model for review
 review_model = api.model('Review', {
     'id': fields.Integer(readonly=True, description='The review identifier'),
     'review_text': fields.String(required=True, description='Review text'),
@@ -111,11 +81,12 @@ review_model = api.model('Review', {
 
 def create_token(user_id, user_type):
     payload = {
+        'sub': user_id,
         'user_id': user_id,
         'user_type': user_type,
         'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1)
     }
-    token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
+    token = create_access_token(identity=payload)
     return token
 
 def verify_token():
@@ -126,8 +97,8 @@ def verify_token():
 
     try:
         payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
-        request.user_id = payload['user_id']
-        request.user_type = payload['user_type']
+        g.user_id = payload['user_id']
+        g.user_type = payload['user_type']
     except jwt.ExpiredSignatureError:
         return False, {"error": "Token has expired"}
     except jwt.InvalidTokenError:
@@ -135,7 +106,40 @@ def verify_token():
 
     return True, None
 
-# Define the route for user login and generating JWT token
+def send_welcome_email(email):
+    sg_api_key = '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'
+    message = Mail(
+        from_email='mfalmesteve@gmail.com',
+        to_emails=email,
+        subject='Welcome to YourApp!',
+        html_content='<p>Thank you for joining YourApp! We are excited to have you on board.</p>'
+    )
+
+    try:
+        sg = SendGridAPIClient(sg_api_key)
+        response = sg.send(message)
+        if response.status_code == 202:
+            print('Welcome email sent successfully!')
+        else:
+            print(f'Failed to send welcome email. Status code: {response.status_code}')
+            print(response.body)
+            logging.error(f'Failed to send welcome email. Status code: {response.status_code}, Body: {response.body}')
+    except Exception as e:
+        print(f'An error occurred while sending the welcome email: {str(e)}')
+        logging.error(f'An error occurred while sending the welcome email: {str(e)}')
+
+def user_type_required(required_type):
+    def decorator(fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            current_user_type = get_jwt_identity()['user_type']
+            if current_user_type != required_type:
+                return make_response(jsonify({"error": "You are not authorized to access this resource"}), 403)
+            return fn(*args, **kwargs)
+        return wrapper
+    return decorator
+
+
 @api.route('/login')
 class Login(Resource):
     @api.doc(description='User login and token generation', parser=login_parser)
@@ -148,34 +152,13 @@ class Login(Resource):
 
         user = User.query.filter_by(email=email).first()
 
-        if user is None:
-            print(f"No user found with email: {email}")
+        if user is None or not check_password_hash(user.password, password):
+            print(f"Invalid email or password for user with email: {email}")
             return make_response(jsonify({"error": "Invalid email or password"}), 401)
 
-        print(f"Found user with email: {email}, id: {user.id}")
-
-        try:
-            User.validate_password(password)
-        except ValueError as e:
-            print(f"Invalid password format for user with email: {email}, id: {user.id}")
-            return make_response(jsonify({"error": str(e)}), 401)
-
-        if not check_password_hash(user.password, password):
-            print(f"Invalid password for user with email: {email}, id: {user.id}")
-            token = create_access_token(identity=user.id)
-            print(f" token: {token}")
-            
-
-            return make_response(jsonify({user.user_type: token}), 200)
-    
-        print(f"Successful login for user with email: {email}, id: {user.id}")
-
-        token = create_access_token(identity=user.id)
-
-        return make_response(jsonify({"token": token}), 200)
-
-
-# Define a protected route that requires authentication
+        print(f"Successful login")
+        access_token = create_token(user.id, user.user_type)
+        return make_response(jsonify({user.user_type: access_token}), 200)
 @api.route('/protected')
 class ProtectedResource(Resource):
     @jwt_required()
@@ -193,8 +176,6 @@ class IndexResource(Resource):
 api.add_resource(IndexResource, '/')
 
 DEFAULT_PAGE_SIZE = 10
-
-# Route for getting all users and creating a new user
 
 @api.route('/users')
 class Users(Resource):
@@ -234,12 +215,9 @@ class Users(Resource):
             last_name=data['last_name'],
             email=email,
             phone_number=data['phone_number'],
-            password=data['password'],
+            password=generate_password_hash(data['password']),
             user_type=data['user_type']
         )
-
-        hashed_password = generate_password_hash(data['password'])
-        print(f"Hashed password: {hashed_password}")
 
         db.session.add(new_user)
         db.session.commit()
@@ -248,9 +226,8 @@ class Users(Resource):
         response = make_response(jsonify(response_dict), 201)
 
         return response
-# Route for getting, updating, and deleting a specific user by ID
+    
 @api.route('/users/<int:id>')
-
 class User_by_Id(Resource):
     @api.doc(description='Get a specific user by ID')
     def get(self, id):
@@ -293,7 +270,6 @@ class User_by_Id(Resource):
 
         return response
 
-# Route for getting all properties and creating a new property
 @api.route('/properties')
 class Properties(Resource):
     @api.doc(description='Get a list of all properties')
@@ -319,6 +295,8 @@ class Properties(Resource):
         return make_response(jsonify(response), 200)
 
     @api.doc(description='Create a new property', body=property_model)
+    @jwt_required()
+    @user_type_required('owner')
     def post(self):
         data = request.get_json()
         new_property = Property(
@@ -339,7 +317,6 @@ class Properties(Resource):
 
         return response
 
-# Route for getting, updating, and deleting a specific property by ID
 @api.route('/properties/<int:id>')
 class Property_by_Id(Resource):
     @api.doc(description='Get a specific property by ID')
@@ -383,7 +360,6 @@ class Property_by_Id(Resource):
 
         return response
 
-# Route for getting all payments and creating a new payment
 @api.route('/payments')
 class Payments(Resource):
     @api.doc(description='Get a list of all payments')
@@ -409,7 +385,6 @@ class Payments(Resource):
         return make_response(jsonify(response), 200)
 
 
-# api.add_resource(Payments, "/payments")
     @api.doc(description='Create a new payment', body=payment_model)
     def post(self):
         data = request.get_json()
@@ -428,7 +403,6 @@ class Payments(Resource):
 
         return response
 
-# Route for getting, updating, and deleting a specific payment by ID
 @api.route('/payments/<int:id>')
 class Payment_by_Id(Resource):
     @api.doc(description='Get a specific payment by ID')
@@ -472,7 +446,6 @@ class Payment_by_Id(Resource):
 
         return response
 
-# Route for getting all move assistances and creating a new move assistance
 @api.route('/move_assistances')
 class MoveAssistances(Resource):
     @api.doc(description='Get a list of all move assistances')
@@ -513,7 +486,6 @@ class MoveAssistances(Resource):
 
         return response
 
-# Route for getting, updating, and deleting a specific move assistance by ID
 @api.route('/move_assistances/<int:id>')
 class MoveAssistance_by_Id(Resource):
     @api.doc(description='Get a specific move assistance by ID')
@@ -557,7 +529,6 @@ class MoveAssistance_by_Id(Resource):
 
         return response
 
-# Route for getting all reviews and creating a new review
 @api.route('/reviews')
 class Reviews(Resource):
     @api.doc(description='Get a list of all reviews')
@@ -583,6 +554,8 @@ class Reviews(Resource):
         return make_response(jsonify(response), 200)
 
     @api.doc(description='Create a new review', body=review_model)
+    @jwt_required()
+    @user_type_required('tenant')
     def post(self):
         data = request.get_json()
         new_review = Review(
@@ -599,7 +572,6 @@ class Reviews(Resource):
 
         return response
 
-# Route for getting, updating, and deleting a specific review by ID
 @api.route('/reviews/<int:id>')
 class Review_by_Id(Resource):
     @api.doc(description='Get a specific review by ID')
