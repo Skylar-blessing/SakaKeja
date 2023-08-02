@@ -10,6 +10,7 @@ import logging
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 import os
+from functools import wraps
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
@@ -125,9 +126,22 @@ def send_welcome_email(email):
         print(f'An error occurred while sending the welcome email: {str(e)}')
         logging.error(f'An error occurred while sending the welcome email: {str(e)}')
 
+def user_type_required(required_type):
+    def decorator(fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            current_user_type = get_jwt_identity()['user_type']
+            if current_user_type != required_type:
+                return make_response(jsonify({"error": "You are not authorized to access this resource"}), 403)
+            return fn(*args, **kwargs)
+        return wrapper
+    return decorator
+
 
 @api.route('/login')
 class Login(Resource):
+    # ... other code ...
+
     @api.doc(description='User login and token generation', parser=login_parser)
     def post(self):
         data = request.get_json()
@@ -138,20 +152,13 @@ class Login(Resource):
 
         user = User.query.filter_by(email=email).first()
 
-        if user is None:
-            print(f"No user found with email: {email}")
+        if user is None or not check_password_hash(user.password, password):
+            print(f"Invalid email or password for user with email: {email}")
             return make_response(jsonify({"error": "Invalid email or password"}), 401)
 
-        #print(f"Stored hashed password: {user.password}")
-        #print(f"Provided password: {password}")
-
-        if user.password == password:
-            print(f"Successful login")
-            access_token = create_access_token(identity=user.id)
-            return make_response(jsonify({user.user_type: access_token}), 200)
-        else:
-            print(f"Invalid password for user with email: {email}, id: {user.id}")
-            return make_response(jsonify({"error": "Invalid email or password"}), 401)
+        print(f"Successful login")
+        access_token = create_access_token(identity=user.id)
+        return make_response(jsonify({user.user_type: access_token}), 200)
 
 @api.route('/protected')
 class ProtectedResource(Resource):
@@ -209,7 +216,7 @@ class Users(Resource):
             last_name=data['last_name'],
             email=email,
             phone_number=data['phone_number'],
-            password=generate_password_hash(data['password']),  
+            password=generate_password_hash(data['password']),
             user_type=data['user_type']
         )
 
@@ -289,6 +296,8 @@ class Properties(Resource):
         return make_response(jsonify(response), 200)
 
     @api.doc(description='Create a new property', body=property_model)
+    @jwt_required()
+    @user_type_required('owner')
     def post(self):
         data = request.get_json()
         new_property = Property(
@@ -546,6 +555,8 @@ class Reviews(Resource):
         return make_response(jsonify(response), 200)
 
     @api.doc(description='Create a new review', body=review_model)
+    @jwt_required()
+    @user_type_required('tenant')
     def post(self):
         data = request.get_json()
         new_review = Review(
@@ -562,7 +573,6 @@ class Reviews(Resource):
 
         return response
 
-# Route for getting, updating, and deleting a specific review by ID
 @api.route('/reviews/<int:id>')
 class Review_by_Id(Resource):
     @api.doc(description='Get a specific review by ID')
