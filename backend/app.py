@@ -1,19 +1,17 @@
-from flask import Flask, jsonify, make_response, request
+import os
+import jwt
+import datetime
+from functools import wraps
+from flask import Flask, jsonify, make_response, request, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_restx import Api, Resource, fields
 from flask_cors import CORS
 from config import Config
-import jwt
-import datetime
-import logging
-from werkzeug.security import check_password_hash, generate_password_hash
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
-import os
-from functools import wraps
-from flask import g
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+from flask_mail import Mail, Message
+from werkzeug.security import check_password_hash, generate_password_hash
+import requests
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -22,6 +20,8 @@ CORS(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 api = Api(app)
+
+mail = Mail(app)
 
 jwt_manager = JWTManager(app)
 
@@ -33,6 +33,14 @@ login_parser.add_argument('email', type=str, required=True, help='Email address'
 login_parser.add_argument('password', type=str, required=True, help='Password', location='json')
 
 app.config['SECRET_KEY'] = 'saka-keja-key'
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = os.environ.get('SAKAKEJA_EMAIL')
+app.config['MAIL_PASSWORD'] = os.environ.get('SAKAKEJA_EMAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('SAKAKEJA_EMAIL')
 
 user_model = api.model('User', {
     'id': fields.Integer(readonly=True, description='The user identifier'),
@@ -106,39 +114,51 @@ def verify_token():
 
     return True, None
 
-def send_welcome_email(email):
-    sg_api_key = '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'
-    message = Mail(
-        from_email='mfalmesteve@gmail.com',
-        to_emails=email,
-        subject='Welcome to YourApp!',
-        html_content='<p>Thank you for joining YourApp! We are excited to have you on board.</p>'
-    )
-
-    try:
-        sg = SendGridAPIClient(sg_api_key)
-        response = sg.send(message)
-        if response.status_code == 202:
-            print('Welcome email sent successfully!')
-        else:
-            print(f'Failed to send welcome email. Status code: {response.status_code}')
-            print(response.body)
-            logging.error(f'Failed to send welcome email. Status code: {response.status_code}, Body: {response.body}')
-    except Exception as e:
-        print(f'An error occurred while sending the welcome email: {str(e)}')
-        logging.error(f'An error occurred while sending the welcome email: {str(e)}')
-
-def user_type_required(required_type):
+def user_type_required(required_types):
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
             current_user_type = get_jwt_identity()['user_type']
-            if current_user_type != required_type:
+            if current_user_type not in required_types:
                 return make_response(jsonify({"error": "You are not authorized to access this resource"}), 403)
             return fn(*args, **kwargs)
         return wrapper
     return decorator
 
+def send_welcome_email(email):
+    print("Sending welcome email to:", email)
+
+    api_key = 'eef1501c9c3c7cd15bba6030171be25f-us21'
+    list_id = '4e4f07fe87'
+
+    mailchimp_url = f'https://us21.api.mailchimp.com/3.0/lists/{list_id}/members'
+    headers = {
+        'Authorization': f'apikey {api_key}',
+        'Content-Type': 'application/json'
+    }
+    data = {
+        'email_address': email,
+        'status': 'subscribed',
+        'merge_fields': {
+            'FNAME': '',  
+            'LNAME': '', 
+        }
+    }
+
+    try:
+        response = requests.post(mailchimp_url, json=data, headers=headers)
+        response.raise_for_status()
+
+        message_subject = "Welcome to Our Application"
+        message_body = f"Dear User,\n\nThank you for signing up with our application! We are excited to have you on board.\n\nBest regards,\nThe Team"
+        
+        msg = Message(message_subject, recipients=[email])
+        msg.body = message_body
+        mail.send(msg)
+
+        print("Email sent successfully!")
+    except requests.exceptions.RequestException as e:
+        print(f"Error sending email: {e}")
 
 @api.route('/login')
 class Login(Resource):
@@ -159,6 +179,7 @@ class Login(Resource):
         print(f"Successful login")
         access_token = create_token(user.id, user.user_type)
         return make_response(jsonify({user.user_type: access_token}), 200)
+    
 @api.route('/protected')
 class ProtectedResource(Resource):
     @jwt_required()
@@ -221,6 +242,8 @@ class Users(Resource):
 
         db.session.add(new_user)
         db.session.commit()
+
+        send_welcome_email(data['email'])
 
         response_dict = new_user.to_dict()
         response = make_response(jsonify(response_dict), 201)
@@ -296,7 +319,7 @@ class Properties(Resource):
 
     @api.doc(description='Create a new property', body=property_model)
     @jwt_required()
-    @user_type_required('owner')
+    @user_type_required(['owner', 'admin'])
     def post(self):
         data = request.get_json()
         new_property = Property(
@@ -555,7 +578,7 @@ class Reviews(Resource):
 
     @api.doc(description='Create a new review', body=review_model)
     @jwt_required()
-    @user_type_required('tenant')
+    @user_type_required(['tenant', 'admin'])
     def post(self):
         data = request.get_json()
         new_review = Review(
