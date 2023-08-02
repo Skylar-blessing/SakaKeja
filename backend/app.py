@@ -9,6 +9,9 @@ import datetime
 import logging
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -100,6 +103,28 @@ def verify_token():
 
     return True, None
 
+def send_welcome_email(email):
+    sg_api_key = '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'
+    message = Mail(
+        from_email='mfalmesteve@gmail.com',
+        to_emails=email,
+        subject='Welcome to YourApp!',
+        html_content='<p>Thank you for joining YourApp! We are excited to have you on board.</p>'
+    )
+
+    try:
+        sg = SendGridAPIClient(sg_api_key)
+        response = sg.send(message)
+        if response.status_code == 202:
+            print('Welcome email sent successfully!')
+        else:
+            print(f'Failed to send welcome email. Status code: {response.status_code}')
+            print(response.body)
+            logging.error(f'Failed to send welcome email. Status code: {response.status_code}, Body: {response.body}')
+    except Exception as e:
+        print(f'An error occurred while sending the welcome email: {str(e)}')
+        logging.error(f'An error occurred while sending the welcome email: {str(e)}')
+
 
 @api.route('/login')
 class Login(Resource):
@@ -138,7 +163,6 @@ class Login(Resource):
         token = create_access_token(identity=user.id)
 
         return make_response(jsonify({"token": token}), 200)
-
 
 @api.route('/protected')
 class ProtectedResource(Resource):
@@ -210,9 +234,8 @@ class Users(Resource):
         response = make_response(jsonify(response_dict), 201)
 
         return response
-
+    
 @api.route('/users/<int:id>')
-
 class User_by_Id(Resource):
     @api.doc(description='Get a specific user by ID')
     def get(self, id):
