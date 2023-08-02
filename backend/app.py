@@ -142,27 +142,16 @@ class Login(Resource):
             print(f"No user found with email: {email}")
             return make_response(jsonify({"error": "Invalid email or password"}), 401)
 
-        print(f"Found user with email: {email}, id: {user.id}")
+        print(f"Stored hashed password: {user.password}")
+        print(f"Provided password: {password}")
 
-        try:
-            User.validate_password(password)
-        except ValueError as e:
-            print(f"Invalid password format for user with email: {email}, id: {user.id}")
-            return make_response(jsonify({"error": str(e)}), 401)
-
-        if not check_password_hash(user.password, password):
+        if user.password == password:
+            print(f"Successful login")
+            access_token = create_access_token(identity=user.id)
+            return make_response(jsonify({user.user_type: access_token}), 200)
+        else:
             print(f"Invalid password for user with email: {email}, id: {user.id}")
-            token = create_access_token(identity=user.id)
-            print(f" token: {token}")
-            
-
-            return make_response(jsonify({user.user_type: token}), 200)
-    
-        print(f"Successful login for user with email: {email}, id: {user.id}")
-
-        token = create_access_token(identity=user.id)
-
-        return make_response(jsonify({"token": token}), 200)
+            return make_response(jsonify({"error": "Invalid email or password"}), 401)
 
 @api.route('/protected')
 class ProtectedResource(Resource):
@@ -220,12 +209,9 @@ class Users(Resource):
             last_name=data['last_name'],
             email=email,
             phone_number=data['phone_number'],
-            password=data['password'],
+            password=generate_password_hash(data['password']),  # Hash the password before saving
             user_type=data['user_type']
         )
-
-        hashed_password = generate_password_hash(data['password'])
-        print(f"Hashed password: {hashed_password}")
 
         db.session.add(new_user)
         db.session.commit()

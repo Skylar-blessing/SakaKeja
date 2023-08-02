@@ -13,7 +13,7 @@ class User(db.Model):
     last_name = db.Column(db.String(100))
     email = db.Column(db.String(120))
     phone_number = db.Column(db.String(50))
-    password = db.Column(db.String(100))
+    password = db.Column(db.String(255), nullable=False)
     user_type = db.Column(db.String(20), nullable=False)
 
     properties_owned = db.relationship("Property", backref="owner", lazy="select")
