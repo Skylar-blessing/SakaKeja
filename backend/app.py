@@ -5,13 +5,20 @@ from functools import wraps
 from flask import Flask, jsonify, make_response, request, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_restx import Api, Resource, fields
+from flask_restx import Api, Resource, fields, reqparse
 from flask_cors import CORS
 from config import Config
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
-from flask_mail import Mail, Message
 from werkzeug.security import check_password_hash, generate_password_hash
-import requests
+import cloudinary
+import cloudinary.uploader
+
+cloudinary.config(
+    cloud_name=Config.CLOUDINARY_CLOUD_NAME,
+    api_key=Config.CLOUDINARY_API_KEY,
+    api_secret=Config.CLOUDINARY_API_SECRET
+)
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -21,26 +28,10 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 api = Api(app)
 
-mail = Mail(app)
-
 jwt_manager = JWTManager(app)
-
 
 from models import User, Payment, Property, MoveAssistance, Review
 
-login_parser = api.parser()
-login_parser.add_argument('email', type=str, required=True, help='Email address', location='json')
-login_parser.add_argument('password', type=str, required=True, help='Password', location='json')
-
-app.config['SECRET_KEY'] = 'saka-keja-key'
-
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = os.environ.get('SAKAKEJA_EMAIL')
-app.config['MAIL_PASSWORD'] = os.environ.get('SAKAKEJA_EMAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('SAKAKEJA_EMAIL')
 
 user_model = api.model('User', {
     'id': fields.Integer(readonly=True, description='The user identifier'),
@@ -125,46 +116,16 @@ def user_type_required(required_types):
         return wrapper
     return decorator
 
-def send_welcome_email(email):
-    print("Sending welcome email to:", email)
 
-    api_key = 'eef1501c9c3c7cd15bba6030171be25f-us21'
-    list_id = '4e4f07fe87'
-
-    mailchimp_url = f'https://us21.api.mailchimp.com/3.0/lists/{list_id}/members'
-    headers = {
-        'Authorization': f'apikey {api_key}',
-        'Content-Type': 'application/json'
-    }
-    data = {
-        'email_address': email,
-        'status': 'subscribed',
-        'merge_fields': {
-            'FNAME': '',  
-            'LNAME': '', 
-        }
-    }
-
-    try:
-        response = requests.post(mailchimp_url, json=data, headers=headers)
-        response.raise_for_status()
-
-        message_subject = "Welcome to Our Application"
-        message_body = f"Dear User,\n\nThank you for signing up with our application! We are excited to have you on board.\n\nBest regards,\nThe Team"
-        
-        msg = Message(message_subject, recipients=[email])
-        msg.body = message_body
-        mail.send(msg)
-
-        print("Email sent successfully!")
-    except requests.exceptions.RequestException as e:
-        print(f"Error sending email: {e}")
+login_parser = reqparse.RequestParser()
+login_parser.add_argument('email', type=str, required=True, help='Email address')
+login_parser.add_argument('password', type=str, required=True, help='Password')
 
 @api.route('/login')
 class Login(Resource):
     @api.doc(description='User login and token generation', parser=login_parser)
     def post(self):
-        data = request.get_json()
+        data = login_parser.parse_args()
         email = data['email']
         password = data['password']
 
@@ -243,14 +204,27 @@ class Users(Resource):
         db.session.add(new_user)
         db.session.commit()
 
-        send_welcome_email(data['email'])
-
         response_dict = new_user.to_dict()
         response = make_response(jsonify(response_dict), 201)
 
         return response
-    
-@api.route('/users/<int:id>')
+
+@api.route('/verify_email/<string:token>')
+class VerifyEmail(Resource):
+    def get(self, token):
+        user_id = verify_verification_token(token)
+        if user_id:
+            user = User.query.get(user_id)
+            if user:
+                user.is_verified = True
+                db.session.commit()
+                return make_response(jsonify({"message": "Email verified successfully"}), 200)
+            else:
+                return make_response(jsonify({"error": "User not found"}), 404)
+        else:
+            return make_response(jsonify({"error": "Invalid or expired token"}), 400)
+
+@api.route('/users/<int:id>')      
 class User_by_Id(Resource):
     @api.doc(description='Get a specific user by ID')
     def get(self, id):
@@ -322,6 +296,13 @@ class Properties(Resource):
     @user_type_required(['owner', 'admin'])
     def post(self):
         data = request.get_json()
+        
+        image_urls = []
+        if 'image_urls' in data and isinstance(data['image_urls'], list):
+            for image_url in data['image_urls']:
+                uploaded_image = cloudinary.uploader.upload(image_url)
+                image_urls.append(uploaded_image['secure_url'])
+        
         new_property = Property(
             owner_id=data['owner_id'],
             number_of_rooms=data['number_of_rooms'],
@@ -330,7 +311,7 @@ class Properties(Resource):
             price=data['price'],
             description=data['description'],
             rating=data['rating'],
-            image_urls=data['image_urls']
+            image_urls=image_urls
         )
         db.session.add(new_property)
         db.session.commit()

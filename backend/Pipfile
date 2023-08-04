@@ -21,6 +21,10 @@ flask-restx = "*"
 sendgrid = "*"
 flask-mail = "*"
 requests = "*"
+google-auth = "*"
+google-auth-oauthlib = "*"
+google-auth-httplib2 = "*"
+cloudinary = "*"
 
 [dev-packages]
 
