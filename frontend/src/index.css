@@ -1,5 +1,3 @@
-Index.css:
-
 body, html {
   /* Set the height of body and html to 100% */
   height: 100%;
@@ -164,20 +162,6 @@ body, html {
   padding: 6px;
   border-radius: 50%;
 }
-Now, when you use the SearchComponent in your React app, the search container will have rounded corners, the search input will have a white background, the search icon will have a green background, and the filter icon will also be green and part of the search input. The dropdown menu will have a light-grey background.
-
-
-
-
-
-
-
-
-
-
-  /* styles.css */
-
-/* Common styles for labels and buttons */
 label {
   font-family: 'Lily Script One', cursive;
 }
@@ -190,7 +174,7 @@ button {
   margin-top: 10px;
 }
 
-/* Specific styles for the SignUp component */
+/* the SignUp component */
 #sign-up-container {
   width: 400px;
   margin: 0 auto;
@@ -277,4 +261,298 @@ button {
   background-position: center;
 }
 
+/* LoginPage  */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url('./images/bb.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-clip: url;
+}
 
+.login-container h2 {
+  font-size: 40px;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.login-container p {
+  font-size: 20px;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 30px;
+}
+
+.user-type-dropdown {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.user-type-dropdown label {
+  font-size: 20px;
+  color: #fff;
+  margin-right: 10px;
+}
+
+.user-type-dropdown select {
+  padding: 8px;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  background-color: hsl(211, 49%, 58%);
+  color: #fff;
+  font-size: 16px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 400px;
+  padding: 20px;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.email-container,
+.password-container,
+.remember-me-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.email-container label,
+.password-container label,
+.remember-me-container label {
+  font-size: 18px;
+  color: #333;
+}
+
+.email-container input,
+.password-container input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.remember-me-container input {
+  margin-right: 10px;
+}
+
+.login-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.sign-in-options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.sign-in-options p {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.google-sign-in,
+.apple-sign-in {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.google-sign-in {
+  background-color: #4CAF50;
+}
+
+.apple-sign-in {
+  background-color: #333;
+  margin-top: 10px;
+}
+
+.signup-option {
+  font-size: 16px;
+  color: #333;
+  margin-top: 20px;
+}
+
+.signup-option a {
+  color: #007bff;
+}
+
+
+/* Signup page */
+.signup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url('./images/ee.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  min-height: 100vh;
+  background-clip: url;
+}
+
+.signup-container h2 {
+  font-size: 40px;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.user-type-dropdown {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.user-type-dropdown label {
+  font-size: 20px;
+  color: #fff;
+  margin-right: 10px;
+}
+
+.user-type-dropdown select {
+  padding: 8px;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  background-color: hsl(211, 49%, 58%);
+  color: #fff;
+  font-size: 16px;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 400px;
+  padding: 20px;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.name-container,
+.email-container,
+.password-container,
+.terms-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.name-container label,
+.email-container label,
+.password-container label,
+.terms-container label {
+  font-size: 18px;
+  color: #333;
+}
+
+.name-container input,
+.email-container input,
+.password-container input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.terms-container input {
+  margin-right: 10px;
+}
+
+.signup-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.signup-options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.signup-options p {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.google-signup,
+.apple-signup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.google-signup {
+  background-color: #4CAF50;
+  background-image: url('https://www.shutterstock.com/image-vector/google-popular-realistic-social-media-logotype-2275269793'); 
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.apple-signup {
+  background-color: #333;
+  margin-top: 10px;
+  background-image: url('https://www.shutterstock.com/image-photo/valencia-spain-march-05-2017-apple-593485994'); 
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.signin-option {
+  font-size: 16px;
+  color: #333;
+  margin-top: 20px;
+}
+
+.signin-option a {
+  color: #007bff;
+}
