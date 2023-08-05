@@ -198,7 +198,7 @@ class Login(Resource):
 
         print(f"Successful login")
         access_token, refresh_token = create_token(user.id, user.user_type)
-        return make_response(jsonify({"access_token": access_token, "refresh_token": refresh_token}), 200)
+        return make_response(jsonify({user.user_type: access_token, "refresh_token": refresh_token}), 200)
     
 @api.route('/protected')
 class ProtectedResource(Resource):
