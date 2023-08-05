@@ -13,6 +13,9 @@ class User(db.Model):
     phone_number = db.Column(db.String(50))
     password = db.Column(db.String(255), nullable=False)
     user_type = db.Column(db.String(20), nullable=False)
+    email_verified = db.Column(db.Boolean, default=False)
+
+    verification_token = db.Column(db.String(100), unique=True)
 
     properties_owned = db.relationship("Property", backref="owner", lazy="select")
     payments_made = db.relationship("Payment", backref="tenant", lazy="select")
