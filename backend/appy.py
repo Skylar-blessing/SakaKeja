@@ -1,3 +1,32 @@
+# def create_token(user_id, user_type):
+#     payload = {
+#         'sub': user_id,
+#         'user_id': user_id,
+#         'user_type': user_type,
+#         'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1)
+#     }
+#     token = create_access_token(identity=payload)
+#     return token
+
+# def verify_token():
+#     token = request.headers.get('Authorization')
+
+#     if not token:
+#         return False, {"error": "Authorization token not provided"}
+
+#     try:
+#         payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+#         g.user_id = payload['user_id']
+#         g.user_type = payload['user_type']
+#     except jwt.ExpiredSignatureError:
+#         return False, {"error": "Token has expired"}
+#     except jwt.InvalidTokenError:
+#         return False, {"error": "Invalid token"}
+
+#     return True, None
+
+
+
 # from flask import Flask, jsonify, make_response, request
 # from flask_sqlalchemy import SQLAlchemy
 # from flask_migrate import Migrate

@@ -1,19 +1,25 @@
-from flask import Flask, jsonify, make_response, request
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from flask_restx import Api, Resource, fields
-from flask_cors import CORS
-from config import Config
+import os
 import jwt
 import datetime
-import logging
-from werkzeug.security import check_password_hash, generate_password_hash
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
-import os
 from functools import wraps
-from flask import g
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+from flask import Flask, jsonify, make_response, request, g
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from flask_restx import Api, Resource, fields, reqparse
+from flask_cors import CORS
+from config import Config
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+from werkzeug.security import check_password_hash, generate_password_hash
+import cloudinary
+import cloudinary.uploader
+
+
+cloudinary.config(
+    cloud_name=Config.CLOUDINARY_CLOUD_NAME,
+    api_key=Config.CLOUDINARY_API_KEY,
+    api_secret=Config.CLOUDINARY_API_SECRET
+)
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -23,16 +29,13 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 api = Api(app)
 
+import secrets
+
+app.config['JWT_SECRET_KEY'] = secrets.token_urlsafe(32)
+
 jwt_manager = JWTManager(app)
 
-
 from models import User, Payment, Property, MoveAssistance, Review
-
-login_parser = api.parser()
-login_parser.add_argument('email', type=str, required=True, help='Email address', location='json')
-login_parser.add_argument('password', type=str, required=True, help='Password', location='json')
-
-app.config['SECRET_KEY'] = 'saka-keja-key'
 
 user_model = api.model('User', {
     'id': fields.Integer(readonly=True, description='The user identifier'),
@@ -106,45 +109,27 @@ def verify_token():
 
     return True, None
 
-def send_welcome_email(email):
-    sg_api_key = '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'
-    message = Mail(
-        from_email='mfalmesteve@gmail.com',
-        to_emails=email,
-        subject='Welcome to YourApp!',
-        html_content='<p>Thank you for joining YourApp! We are excited to have you on board.</p>'
-    )
-
-    try:
-        sg = SendGridAPIClient(sg_api_key)
-        response = sg.send(message)
-        if response.status_code == 202:
-            print('Welcome email sent successfully!')
-        else:
-            print(f'Failed to send welcome email. Status code: {response.status_code}')
-            print(response.body)
-            logging.error(f'Failed to send welcome email. Status code: {response.status_code}, Body: {response.body}')
-    except Exception as e:
-        print(f'An error occurred while sending the welcome email: {str(e)}')
-        logging.error(f'An error occurred while sending the welcome email: {str(e)}')
-
-def user_type_required(required_type):
+def user_type_required(required_types):
     def decorator(fn):
         @wraps(fn)
         def wrapper(*args, **kwargs):
             current_user_type = get_jwt_identity()['user_type']
-            if current_user_type != required_type:
+            if current_user_type not in required_types:
                 return make_response(jsonify({"error": "You are not authorized to access this resource"}), 403)
             return fn(*args, **kwargs)
         return wrapper
     return decorator
 
 
+login_parser = reqparse.RequestParser()
+login_parser.add_argument('email', type=str, required=True, help='Email address')
+login_parser.add_argument('password', type=str, required=True, help='Password')
+
 @api.route('/login')
 class Login(Resource):
     @api.doc(description='User login and token generation', parser=login_parser)
     def post(self):
-        data = request.get_json()
+        data = login_parser.parse_args()
         email = data['email']
         password = data['password']
 
@@ -159,6 +144,7 @@ class Login(Resource):
         print(f"Successful login")
         access_token = create_token(user.id, user.user_type)
         return make_response(jsonify({user.user_type: access_token}), 200)
+    
 @api.route('/protected')
 class ProtectedResource(Resource):
     @jwt_required()
@@ -226,8 +212,23 @@ class Users(Resource):
         response = make_response(jsonify(response_dict), 201)
 
         return response
-    
-@api.route('/users/<int:id>')
+
+@api.route('/verify_email/<string:token>')
+class VerifyEmail(Resource):
+    def get(self, token):
+        user_id = verify_verification_token(token)
+        if user_id:
+            user = User.query.get(user_id)
+            if user:
+                user.is_verified = True
+                db.session.commit()
+                return make_response(jsonify({"message": "Email verified successfully"}), 200)
+            else:
+                return make_response(jsonify({"error": "User not found"}), 404)
+        else:
+            return make_response(jsonify({"error": "Invalid or expired token"}), 400)
+
+@api.route('/users/<int:id>')      
 class User_by_Id(Resource):
     @api.doc(description='Get a specific user by ID')
     def get(self, id):
@@ -296,9 +297,16 @@ class Properties(Resource):
 
     @api.doc(description='Create a new property', body=property_model)
     @jwt_required()
-    @user_type_required('owner')
+    @user_type_required(['owner', 'admin'])
     def post(self):
         data = request.get_json()
+        
+        image_urls = []
+        if 'image_urls' in data and isinstance(data['image_urls'], list):
+            for image_url in data['image_urls']:
+                uploaded_image = cloudinary.uploader.upload(image_url)
+                image_urls.append(uploaded_image['secure_url'])
+        
         new_property = Property(
             owner_id=data['owner_id'],
             number_of_rooms=data['number_of_rooms'],
@@ -307,7 +315,7 @@ class Properties(Resource):
             price=data['price'],
             description=data['description'],
             rating=data['rating'],
-            image_urls=data['image_urls']
+            image_urls=image_urls
         )
         db.session.add(new_property)
         db.session.commit()
@@ -555,7 +563,7 @@ class Reviews(Resource):
 
     @api.doc(description='Create a new review', body=review_model)
     @jwt_required()
-    @user_type_required('tenant')
+    @user_type_required(['tenant', 'admin'])
     def post(self):
         data = request.get_json()
         new_review = Review(
