@@ -448,6 +448,8 @@ class Payments(Resource):
         return make_response(jsonify(response), 200)
 
     @api.doc(description='Create a new payment', body=payment_model)
+    @jwt_required()
+    @user_type_required(['tenant', 'admin'])
     def post(self):
         data = api.payload
         amount = data['amount']
