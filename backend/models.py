@@ -4,8 +4,7 @@ from sqlalchemy.orm import validates
 import re
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
-class User(db.Model, SerializerMixin):
+class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(100))
@@ -14,6 +13,9 @@ class User(db.Model, SerializerMixin):
     phone_number = db.Column(db.String(50))
     password = db.Column(db.String(255), nullable=False)
     user_type = db.Column(db.String(20), nullable=False)
+    email_verified = db.Column(db.Boolean, default=False)
+
+    verification_token = db.Column(db.String(100), unique=True)
 
     properties_owned = db.relationship("Property", backref="owner", lazy="select")
     payments_made = db.relationship("Payment", backref="tenant", lazy="select")
@@ -48,9 +50,12 @@ class User(db.Model, SerializerMixin):
         if not any(char in '!@#$%^&*()-=_+[]{}|;:,.<>?' for char in password):
             raise ValueError("Password must contain at least one special character.")
 
+        return True
+
     @classmethod
     def create(cls, first_name, last_name, email, phone_number, password, user_type):
-        cls.validate_password(password)
+        if not cls.validate_password(password):
+            raise ValueError("Invalid password format")
 
         hashed_password = generate_password_hash(password)
         print(f"Hashed password: {hashed_password}") 
@@ -67,7 +72,7 @@ class User(db.Model, SerializerMixin):
         db.session.commit()
 
         return new_user
-    
+
 class Property(db.Model, SerializerMixin):
     __tablename__ = 'properties'
     id = db.Column(db.Integer, primary_key=True)

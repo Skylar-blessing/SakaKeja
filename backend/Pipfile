@@ -21,6 +21,7 @@ sendgrid = "*"
 cloudinary = "*"
 pillow = "*"
 jwt = "*"
+flask-mail = "*"
 
 [dev-packages]
 

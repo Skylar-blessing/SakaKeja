@@ -39,6 +39,9 @@ const Header = () => {
         <Link to="/signup">
           <button className="signupButton">Sign Up</button>
         </Link>
+        <Link to="/about">
+          <button className="aboutButton">About</button>
+        </Link>
       </div>
     </header>
   );

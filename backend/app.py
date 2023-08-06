@@ -1,18 +1,25 @@
+from flask import Flask, jsonify, make_response, request, g, url_for
 import os
 import jwt
-import datetime
+from datetime import datetime, timedelta
 from functools import wraps
-from flask import Flask, jsonify, make_response, request, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_restx import Api, Resource, fields, reqparse
+from flask_restx import Api, Resource, fields, reqparse, Namespace
 from flask_cors import CORS
 from config import Config
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, create_refresh_token
 from werkzeug.security import check_password_hash, generate_password_hash
 import cloudinary
 import cloudinary.uploader
+from flask_mail import Mail, Message
+from secrets import token_urlsafe
+from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
+from paypalcheckoutsdk.orders import OrdersCreateRequest
+import secrets
 
+client_id = os.environ.get('PAYPAL_CLIENT_ID')
+client_secret = os.environ.get('PAYPAL_CLIENT_SECRET')
 
 cloudinary.config(
     cloud_name=Config.CLOUDINARY_CLOUD_NAME,
@@ -29,13 +36,24 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 api = Api(app)
 
-import secrets
+jwt_manager = JWTManager(app)
+
+mail = Mail(app)
+
+from models import User, Payment, Property, MoveAssistance, Review
 
 app.config['JWT_SECRET_KEY'] = secrets.token_urlsafe(32)
 
-jwt_manager = JWTManager(app)
+def send_verification_email(user_email, token):
+    verification_link = url_for('email_verify_email', token=token, _external=True)
 
-from models import User, Payment, Property, MoveAssistance, Review
+    subject = 'Please verify your email'
+    body = f'Click the following link to verify your email: {verification_link}'
+    sender = app.config['MAIL_DEFAULT_SENDER']
+    recipients = [user_email]
+
+    message = Message(subject=subject, body=body, sender=sender, recipients=recipients)
+    mail.send(message)
 
 user_model = api.model('User', {
     'id': fields.Integer(readonly=True, description='The user identifier'),
@@ -83,31 +101,40 @@ review_model = api.model('Review', {
 })
 
 def create_token(user_id, user_type):
-    payload = {
+    access_payload = {
         'sub': user_id,
         'user_id': user_id,
         'user_type': user_type,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1)
+        'exp': datetime.utcnow() + timedelta(hours=1)
     }
-    token = create_access_token(identity=payload)
-    return token
+    access_token = create_access_token(identity=access_payload)
+
+    refresh_payload = {
+        'sub': user_id,
+        'user_id': user_id,
+        'exp': datetime.utcnow() + timedelta(days=30)
+    }
+    refresh_token = create_refresh_token(identity=refresh_payload)
+
+    return access_token, refresh_token
 
 def verify_token():
-    token = request.headers.get('Authorization')
+    access_token = request.headers.get('Authorization')
 
-    if not token:
+    if not access_token:
         return False, {"error": "Authorization token not provided"}
 
     try:
-        payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
-        g.user_id = payload['user_id']
-        g.user_type = payload['user_type']
+        access_payload = jwt.decode(access_token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        g.user_id = access_payload['user_id']
+        g.user_type = access_payload['user_type']
     except jwt.ExpiredSignatureError:
-        return False, {"error": "Token has expired"}
+        return False, {"error": "Access token has expired"}
     except jwt.InvalidTokenError:
-        return False, {"error": "Invalid token"}
+        return False, {"error": "Invalid access token"}
 
     return True, None
+
 
 def user_type_required(required_types):
     def decorator(fn):
@@ -120,10 +147,47 @@ def user_type_required(required_types):
         return wrapper
     return decorator
 
+def get_owner_phone_number(owner_id):
+    user = User.query.filter_by(id=owner_id).first()
+    if user:
+        owner_phone_number = user.phone_number
+        return owner_phone_number
+    else:
+        return None
+
 
 login_parser = reqparse.RequestParser()
 login_parser.add_argument('email', type=str, required=True, help='Email address')
 login_parser.add_argument('password', type=str, required=True, help='Password')
+
+email_namespace = Namespace('email', description='Email verification related operations')
+@email_namespace.route('/verify_email/<token>', methods=['GET'])
+class RefreshToken(Resource):
+    @jwt_required
+    def post(self):
+        user_id = get_jwt_identity()
+        user = User.query.filter_by(id=user_id).first()
+        if user is None:
+            return jsonify({"error": "User not found"}), 404
+
+        user_type = user.user_type
+
+        access_token, refresh_token = create_token(user_id, user_type)
+        return jsonify({"access_token": access_token, "refresh_token": refresh_token}), 200
+
+class VerifyEmail(Resource):
+    def get(self, token):
+        user = User.query.filter_by(verification_token=token).first()
+        if user:
+            user.email_verified = True
+            db.session.commit()
+            return 'Email verified successfully!'
+        return 'Email verification failed!'
+
+email_namespace = api.namespace('email', description='Email verification related operations')
+email_namespace.add_resource(VerifyEmail, '/verify_email/<token>')
+
+email_namespace.add_resource(RefreshToken, '/refresh_token')
 
 @api.route('/login')
 class Login(Resource):
@@ -141,9 +205,13 @@ class Login(Resource):
             print(f"Invalid email or password for user with email: {email}")
             return make_response(jsonify({"error": "Invalid email or password"}), 401)
 
+        if not user.email_verified:
+            print(f"User with email {email} tried to log in without verifying email.")
+            return make_response(jsonify({"error": "Please verify your email first."}), 401)
+
         print(f"Successful login")
-        access_token = create_token(user.id, user.user_type)
-        return make_response(jsonify({user.user_type: access_token}), 200)
+        access_token, refresh_token = create_token(user.id, user.user_type)
+        return make_response(jsonify({user.user_type: access_token, "refresh_token": refresh_token}), 200)
     
 @api.route('/protected')
 class ProtectedResource(Resource):
@@ -191,6 +259,7 @@ class Users(Resource):
     def post(self):
         data = request.get_json()
         email = data['email']
+        verification_token = token_urlsafe(32)
 
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
@@ -202,31 +271,19 @@ class Users(Resource):
             email=email,
             phone_number=data['phone_number'],
             password=generate_password_hash(data['password']),
-            user_type=data['user_type']
+            user_type=data['user_type'],
+            verification_token=verification_token
         )
 
         db.session.add(new_user)
         db.session.commit()
 
+        send_verification_email(new_user.email, new_user.verification_token)
+
         response_dict = new_user.to_dict()
         response = make_response(jsonify(response_dict), 201)
 
         return response
-
-@api.route('/verify_email/<string:token>')
-class VerifyEmail(Resource):
-    def get(self, token):
-        user_id = verify_verification_token(token)
-        if user_id:
-            user = User.query.get(user_id)
-            if user:
-                user.is_verified = True
-                db.session.commit()
-                return make_response(jsonify({"message": "Email verified successfully"}), 200)
-            else:
-                return make_response(jsonify({"error": "User not found"}), 404)
-        else:
-            return make_response(jsonify({"error": "Invalid or expired token"}), 400)
 
 @api.route('/users/<int:id>')      
 class User_by_Id(Resource):
@@ -392,25 +449,63 @@ class Payments(Resource):
 
         return make_response(jsonify(response), 200)
 
-
     @api.doc(description='Create a new payment', body=payment_model)
+    @jwt_required()
+    @user_type_required(['tenant', 'admin'])
     def post(self):
-        data = request.get_json()
-        new_payment = Payment(
-            amount=data['amount'],
-            payment_date=data['payment_date'],
-            status=data['status'],
-            tenant_id=data['tenant_id'],
-            property_id=data['property_id']
-        )
-        db.session.add(new_payment)
-        db.session.commit()
+        data = api.payload
+        amount = data['amount']
+        payment_date = data['payment_date']
+        status = data['status']
+        tenant_id = data['tenant_id']
+        property_id = data['property_id']
 
-        response_dict = new_payment.to_dict()
-        response = make_response(jsonify(response_dict), 201)
+        owner_phone_number = get_owner_phone_number(property_id)
 
-        return response
+        client_id = os.environ.get('PAYPAL_CLIENT_ID')
+        client_secret = os.environ.get('PAYPAL_CLIENT_SECRET')
+        environment = SandboxEnvironment(client_id, client_secret)
+        client = PayPalHttpClient(environment)
 
+        request = OrdersCreateRequest()
+        request.prefer('return=representation')
+        request.request_body({
+            "intent": "CAPTURE",
+            "purchase_units": [{
+                "amount": {
+                    "currency_code": "USD",
+                    "value": amount
+                }
+            }],
+            "application_context": {
+                "return_url": "https://your-redirect-url.com/success",
+                "cancel_url": "https://your-redirect-url.com/cancel"
+            }
+        })
+
+        try:
+            response = client.execute(request)
+            order_id = response.result.id
+
+            new_payment = Payment(
+                amount=amount,
+                payment_date=payment_date,
+                status=status,
+                tenant_id=tenant_id,
+                property_id=property_id
+            )
+            db.session.add(new_payment)
+            db.session.commit()
+            response_dict = {
+                "order_id": order_id,
+                "owner_phone_number": owner_phone_number,
+                "amount": amount,
+            }
+            return make_response(jsonify(response_dict), 201)
+
+        except Exception as e:
+            return make_response(jsonify({"error": str(e)}), 500)
+    
 @api.route('/payments/<int:id>')
 class Payment_by_Id(Resource):
     @api.doc(description='Get a specific payment by ID')
