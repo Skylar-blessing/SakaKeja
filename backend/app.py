@@ -1,8 +1,8 @@
+from flask import Flask, jsonify, make_response, request, g, url_for
 import os
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
-from flask import Flask, jsonify, make_response, request, g, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_restx import Api, Resource, fields, reqparse, Namespace
@@ -14,7 +14,11 @@ import cloudinary
 import cloudinary.uploader
 from flask_mail import Mail, Message
 from secrets import token_urlsafe
+from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
+from paypalcheckoutsdk.orders import OrdersCreateRequest
 
+client_id = os.environ.get('PAYPAL_CLIENT_ID')
+client_secret = os.environ.get('PAYPAL_CLIENT_SECRET')
 
 cloudinary.config(
     cloud_name=Config.CLOUDINARY_CLOUD_NAME,
@@ -141,6 +145,14 @@ def user_type_required(required_types):
         return wrapper
     return decorator
 
+def get_owner_phone_number(owner_id):
+    user = User.query.filter_by(id=owner_id).first()
+    if user:
+        owner_phone_number = user.phone_number
+        return owner_phone_number
+    else:
+        return None
+
 
 login_parser = reqparse.RequestParser()
 login_parser.add_argument('email', type=str, required=True, help='Email address')
@@ -148,7 +160,6 @@ login_parser.add_argument('password', type=str, required=True, help='Password')
 
 email_namespace = Namespace('email', description='Email verification related operations')
 @email_namespace.route('/verify_email/<token>', methods=['GET'])
-
 class RefreshToken(Resource):
     @jwt_required
     def post(self):
@@ -436,25 +447,61 @@ class Payments(Resource):
 
         return make_response(jsonify(response), 200)
 
-
     @api.doc(description='Create a new payment', body=payment_model)
     def post(self):
-        data = request.get_json()
-        new_payment = Payment(
-            amount=data['amount'],
-            payment_date=data['payment_date'],
-            status=data['status'],
-            tenant_id=data['tenant_id'],
-            property_id=data['property_id']
-        )
-        db.session.add(new_payment)
-        db.session.commit()
+        data = api.payload
+        amount = data['amount']
+        payment_date = data['payment_date']
+        status = data['status']
+        tenant_id = data['tenant_id']
+        property_id = data['property_id']
 
-        response_dict = new_payment.to_dict()
-        response = make_response(jsonify(response_dict), 201)
+        owner_phone_number = get_owner_phone_number(property_id)
 
-        return response
+        client_id = os.environ.get('PAYPAL_CLIENT_ID')
+        client_secret = os.environ.get('PAYPAL_CLIENT_SECRET')
+        environment = SandboxEnvironment(client_id, client_secret)
+        client = PayPalHttpClient(environment)
 
+        request = OrdersCreateRequest()
+        request.prefer('return=representation')
+        request.request_body({
+            "intent": "CAPTURE",
+            "purchase_units": [{
+                "amount": {
+                    "currency_code": "USD",
+                    "value": amount
+                }
+            }],
+            "application_context": {
+                "return_url": "https://your-redirect-url.com/success",
+                "cancel_url": "https://your-redirect-url.com/cancel"
+            }
+        })
+
+        try:
+            response = client.execute(request)
+            order_id = response.result.id
+
+            new_payment = Payment(
+                amount=amount,
+                payment_date=payment_date,
+                status=status,
+                tenant_id=tenant_id,
+                property_id=property_id
+            )
+            db.session.add(new_payment)
+            db.session.commit()
+            response_dict = {
+                "order_id": order_id,
+                "owner_phone_number": owner_phone_number,
+                "amount": amount,
+            }
+            return make_response(jsonify(response_dict), 201)
+
+        except Exception as e:
+            return make_response(jsonify({"error": str(e)}), 500)
+    
 @api.route('/payments/<int:id>')
 class Payment_by_Id(Resource):
     @api.doc(description='Get a specific payment by ID')
