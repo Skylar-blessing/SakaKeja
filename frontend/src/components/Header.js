@@ -1,3 +1,4 @@
+// Header.js
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -15,8 +16,13 @@ const Header = () => {
           <li>
             <a href="#about">About Us</a>
           </li>
-          <li>
+          {/* Remove one of the properties buttons from the header */}
+          {/* <li>
             <a href="#properties">Properties</a>
+          </li> */}
+          <li>
+            {/* Add the property button to navigate to the properties page */}
+            <Link to="/properties">Properties</Link>
           </li>
           <li>
             <a href="#blog">Blog</a>
