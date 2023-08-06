@@ -1,31 +1,82 @@
 import React from 'react';
-
+import { Link } from 'react-scroll';
 
 const Header = () => {
   return (
-    <header className="Header">
-      <div className="LogoContainer">
-        <span className="LogoName">Saka-Keja</span>
+    <header>
+      <div className="header-container">
+        <div className="logo-container">
+          <span className="logo-name">SakaKeja</span>
+        </div>
+        <nav className="navbar">
+          <ul>
+            <li>
+              <Link
+                activeClass="active"
+                to="home"
+                spy={true}
+                smooth={true}
+                offset={-70}
+                duration={500}
+              >
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link
+                activeClass="active"
+                to="about-us"
+                spy={true}
+                smooth={true}
+                offset={-70}
+                duration={500}
+              >
+                About Us
+              </Link>
+            </li>
+            <li>
+              <Link
+                activeClass="active"
+                to="properties"
+                spy={true}
+                smooth={true}
+                offset={-70}
+                duration={500}
+              >
+                Properties
+              </Link>
+            </li>
+            <li>
+              <Link
+                activeClass="active"
+                to="blog"
+                spy={true}
+                smooth={true}
+                offset={-70}
+                duration={500}
+              >
+                Blog
+              </Link>
+            </li>
+            <li>
+              <Link
+                activeClass="active"
+                to="contact-us"
+                spy={true}
+                smooth={true}
+                offset={-70}
+                duration={500}
+              >
+                Contact Us
+              </Link>
+            </li>
+          </ul>
+        </nav>
+        <div className="auth-buttons">
+          <Link to="/login" className="auth">Login</Link>
+          <Link to="/signup" className="auth-button">Sign Up</Link>
+        </div>
       </div>
-      <nav className="Navbar">
-        <ul>
-          <li>
-            <a href="#home">Home</a>
-          </li>
-          <li>
-            <a href="#about">About Us</a>
-          </li>
-          <li>
-            <a href="#properties">Properties</a>
-          </li>
-          <li>
-            <a href="#blog">Blog</a>
-          </li>
-          <li>
-            <a href="#contact">Contact Us</a>
-          </li>
-        </ul>
-      </nav>
     </header>
   );
 };

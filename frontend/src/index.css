@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 .search-container {
     display: flex; /* Use Flexbox to display the components in a row */
     align-items: center; /* Center items vertically */
@@ -20,3 +21,357 @@
     cursor: pointer; /* Add cursor pointer to indicate interactivity */
   }
   
+=======
+body, html {
+  /* Set the height of body and html to 100% */
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header.css */
+
+header {
+  /* background-color: #333; */
+  color: #fff;
+  padding: 1rem 0;
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.logo-name {
+  font-size: 40px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.navbar {
+  display: flex;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+}
+
+.navbar li {
+  margin-left: 20px;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #fff;
+  transition: color 0.3s ease;
+  font-size: 20px;
+}
+
+.navbar a:hover {
+  color: rgb(27, 155, 27);
+  cursor: pointer;
+}
+
+.active {
+  color: #f1c40f;
+}
+
+
+
+/* login && :single-button */
+.auth-buttons {
+  display: flex;
+}
+
+.auth-button {
+  margin-left: 10px;
+  background-color: rgb(58, 148, 58);
+  color: #333;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.auth {
+  font-size: 20px;
+}
+
+.auth-button:hover {
+  background-color: #e0b30e;
+}
+
+
+.app-container {
+  background-image: url('./images/aa.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  min-height: 100vh;
+  background-clip: url;
+}
+
+/* Welcome.css */
+.welcome {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin-bottom: 50px;
+}
+
+.welcome h1 {
+  font-size: 50px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.welcome p {
+  font-size: 30px;
+  text-align: center;
+  /* background-color: #9d6d3d; */
+  color: #fff;
+}
+
+
+
+.search-container {
+  display: flex; /* Use Flexbox to display the components in a row */
+  align-items: center; /* Center items vertically */
+  justify-content: space-between; /* Distribute items evenly along the row */
+  width: 550px; 
+  margin: 0 auto; /* Center the container horizontally */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  background-color: #ccc;
+}
+
+.dropdown,
+.search-input {
+  flex: 1; /* Allow these components to expand and fill the available space */
+}
+
+.dropdown select,
+.search-input input {
+  width: 50%; /* Set the width to 100% to fit the parent container */
+  padding: 8px; /* Add some padding to the inputs */
+  border: 1px solid #ccc;
+  border-radius: 20px;
+}
+
+.filter-icon,
+.search-icon {
+  margin-left: 10px; /* Add some spacing between components */
+  cursor: pointer; /* Add cursor pointer to indicate interactivity */
+}
+
+.search-input input {
+  width: 95%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background-color: #fff; /* White background for the search input */
+}
+
+.search-icon {
+  background-color: #4CAF50; /* Green background for the search icon */
+  padding: 6px;
+  border-radius: 50%;
+}
+
+.filter-icon {
+  background-color: #4CAF50; /* Green background for the filter icon */
+  padding: 6px;
+  border-radius: 50%;
+}
+/* Now, when you use the SearchComponent in your React app, the search container will have rounded corners, the search input will have a white background, the search icon will have a green background, and the filter icon will also be green and part of the search input. The dropdown menu will have a light-grey background. */
+
+
+
+
+
+
+
+
+
+
+  /* styles.css */
+
+/* Common styles for labels and buttons */
+label {
+  font-family: 'Lily Script One', cursive;
+}
+
+button {
+  background-color: #edf2f7;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* Specific styles for the SignUp component */
+#sign-up-container {
+  width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#sign-up-container h2 {
+  text-align: center;
+}
+
+#sign-up-container label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+#sign-up-container input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+#sign-up-container select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+#sign-up-container .social-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Specific styles for the Login component */
+#login-container {
+  width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#login-container h2 {
+  text-align: center;
+}
+
+#login-container label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+#login-container input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+#login-container button {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Google and Apple logo background images */
+.google-logo {
+  background-image: url('https://i.pinimg.com/564x/7e/a2/a0/7ea2a086cc5082330324a94c52a66531.jpg'); /* Replace with the URL or file path of the Google logo SVG */
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.apple-logo {
+  background-image: url('https://i.pinimg.com/564x/8d/f5/e7/8df5e76136dcba44841002494e01e050.jpg'); /* Replace with the URL or file path of the Apple logo SVG */
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.about-us {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  /* min-height: 100vh; */
+  /* width: 100%; */
+  background-color: #f9f9f9; 
+}
+
+/* About us component */
+.about-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 0;
+  margin: 0;
+}
+
+.about-image {
+  background-size: cover;
+  background-position: center;
+  width: 50%;
+  height: 70vh; 
+  min-height: 100vh;
+
+}
+
+.about-text {
+  flex: 1;
+  padding: 20px;
+}
+
+
+.about-text h2 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.about-text p {
+  font-size: 1.2rem;
+  line-height: 1.8;  
+  font-size: 22px;
+}
+
+h2,
+p {
+  margin: 0;
+  padding: 0;
+}
+
+
+
+>>>>>>> Stashed changes
