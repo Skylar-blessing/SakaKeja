@@ -5,12 +5,36 @@ const PropertiesPage = () => {
   const [propertyType, setPropertyType] = useState('all');
   const [priceRange, setPriceRange] = useState('');
   const [style, setStyle] = useState('');
+  const [properties, setProperties] = useState([
+    {
+      id: 1,
+      image: 'path/to/property1.jpg',
+      location: 'Nairobi',
+      propertyType: 'House',
+      price: 40000,
+      style: 'Mansion',
+    },
+    {
+      id: 2,
+      image: 'path/to/property2.jpg',
+      location: 'Mombasa',
+      propertyType: 'Apartment',
+      price: 25000,
+      style: 'Cottage',
+    },
+  ]);
 
   const handleSearch = () => {
-    console.log('Location:', location);
-    console.log('Property Type:', propertyType);
-    console.log('Price Range:', priceRange);
-    console.log('Style:', style);
+    const filteredProperties = properties.filter((property) => {
+      return (
+        (location === '' || property.location.toLowerCase().includes(location.toLowerCase())) &&
+        (propertyType === 'all' || property.propertyType === propertyType) &&
+        (priceRange === '' || property.price <= parseInt(priceRange)) &&
+        (style === '' || property.style.toLowerCase().includes(style.toLowerCase()))
+      );
+    });
+
+    setProperties(filteredProperties);
   };
 
   return (
@@ -22,9 +46,9 @@ const PropertiesPage = () => {
           value={location}
           onChange={(e) => setLocation(e.target.value)}
         />
-      </div>
-      <div className="welcome-message">
-        <p>Welcome, username!</p>
+        <button className="filter-button" onClick={handleSearch}>
+          Filter
+        </button>
       </div>
       <div className="menu">
         <div className="left-menu">
@@ -48,8 +72,8 @@ const PropertiesPage = () => {
             onChange={(e) => setPropertyType(e.target.value)}
           >
             <option value="all">All</option>
-            <option value="apartment">Apartment</option>
-            <option value="house">House</option>
+            <option value="Apartment">Apartment</option>
+            <option value="House">House</option>
           </select>
           <label>Price Range:</label>
           <input
@@ -65,12 +89,18 @@ const PropertiesPage = () => {
           />
         </div>
       </div>
-      <div className="results">
-        <p>Results of the Search:</p>
-        <p>Location: {location}</p>
-        <p>Property Type: {propertyType}</p>
-        <p>Price Range: {priceRange}</p>
-        <p>Style: {style}</p>
+      <div className="properties">
+        {properties.map((property) => (
+          <div className="property-card" key={property.id}>
+            <img src={property.image} alt={property.location} />
+            <div className="property-details">
+              <p>Location: {property.location}</p>
+              <p>Property Type: {property.propertyType}</p>
+              <p>Price: {property.price}</p>
+              <p>Style: {property.style}</p>
+            </div>
+          </div>
+        ))}
       </div>
       <div className="logout-button">
         <button>Logout</button>
