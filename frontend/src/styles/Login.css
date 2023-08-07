@@ -1,0 +1,40 @@
+.login-container {
+    display: flex;
+    height: 100vh;
+  }
+
+  input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+  }
+
+  .login-button {
+    width: 110%;
+    background-color: #3A5B22;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .left-half {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f7f7f7;
+    padding: 20px;
+  }
+  
+  .right-half {
+    flex: 1;
+    background-image: url('/home/steve/Saka-Keja/SakaKeja/frontend/src/images/UI.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  

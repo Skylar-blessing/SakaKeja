@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/Login.css';
+
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -47,43 +49,59 @@ function Login() {
 
   return (
     <div className="login-container">
-      <h2>Welcome back!</h2>
-      <p>Enter your credentials to access your account</p>
-      <div className="login-form">
-        <form onSubmit={handleLogin}>
-          <div className="email-container">
-            <label>Email address:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="password-container">
-            <label>Password:</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <button className="login-button" type="submit">
-            Login
-          </button>
-        </form>
+      <div className="left-half">
+        <h2>Welcome back!</h2>
+        <p>Enter your credentials to access your account</p>
+        <div className="login-form">
+          <form onSubmit={handleLogin}>
+            <div className="email-container">
+              <label>Email address:</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="password-container">
+              <label>Password:</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <button className="login-button" type="submit">
+              Login
+            </button>
+          </form>
+        </div>
         <div className="sign-in-options">
           <p>Or sign in with:</p>
-          <button className="google-sign-in">Sign in with Google</button>
-          <button className="apple-sign-in">Sign in with Apple</button>
+          <button className="signin-google-button">
+            <img
+              src="/images/Google.png"
+              alt="Google Logo"
+              className="signin-icon"
+            />
+            Sign in with Google
+          </button>
+          <button className="signin-apple-button">
+            <img
+              src="/home/steve/Saka-Keja/SakaKeja/frontend/src/images/Apple.png"
+              alt="Apple Logo"
+              className="signin-icon"
+            />
+            Sign in with Apple
+          </button>
+        </div>
+        <div className="signup-option">
+          <p>
+            Don't have an account? <a href="/signup">Sign Up</a>
+          </p>
         </div>
       </div>
-      <div className="signup-option">
-        <p>
-          Don't have an account? <a href="/signup">Sign Up</a>
-        </p>
-      </div>
+      <div className="right-half"></div>
     </div>
   );
-}
-
+};
 export default Login;
