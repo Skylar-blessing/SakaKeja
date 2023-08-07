@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
 
-
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,18 +24,26 @@ function Login() {
         body: JSON.stringify(loginData),
       });
 
+      const data = await response.json();
+      console.log('Response data:', data);
+
       if (response.ok) {
-        const data = await response.json();
         const refreshToken = data.refresh_token;
-        const userType = Object.keys(data)[1]; 
+        const userType = Object.keys(data)[0];
+        console.log(userType)
 
-        saveRefreshToken(refreshToken); 
 
-        if (userType === 'owner' || userType === 'tenant') {
-          navigate(`/${userType}-dashboard`);
+        saveRefreshToken(refreshToken);
+
+        if ('unverified' in data) {
+          alert('Please verify your email before logging in.');
+        } else if ('owner' in data || 'tenant' in data) {
+          navigate('/' + (data.owner ? 'owner' : 'tenant') + '-dashboard');
         } else {
+          alert('Unknown user type. Please contact support.');
         }
       } else {
+        alert('Invalid email or password. Please try again.');
       }
     } catch (error) {
       console.error('Error occurred during login:', error);
@@ -103,5 +110,6 @@ function Login() {
       <div className="right-half"></div>
     </div>
   );
-};
+}
+
 export default Login;
