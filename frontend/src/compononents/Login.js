@@ -9,12 +9,12 @@ function Login() {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-
+  
     const loginData = {
       email,
       password,
     };
-
+  
     try {
       const response = await fetch('http://127.0.0.1:5000/login', {
         method: 'POST',
@@ -23,18 +23,17 @@ function Login() {
         },
         body: JSON.stringify(loginData),
       });
-
+  
       const data = await response.json();
-      console.log('Response data:', data);
-
+      console.log('Response data:', data); 
+  
       if (response.ok) {
         const refreshToken = data.refresh_token;
         const userType = Object.keys(data)[0];
         console.log(userType)
-
-
+  
         saveRefreshToken(refreshToken);
-
+  
         if ('unverified' in data) {
           alert('Please verify your email before logging in.');
         } else if ('owner' in data || 'tenant' in data) {
@@ -43,13 +42,12 @@ function Login() {
           alert('Unknown user type. Please contact support.');
         }
       } else {
-        alert('Invalid email or password. Please try again.');
+        alert(`${JSON.stringify(data)}`);
       }
     } catch (error) {
       console.error('Error occurred during login:', error);
     }
   };
-
   const saveRefreshToken = (token) => {
     localStorage.setItem('refresh_token', token);
   };
