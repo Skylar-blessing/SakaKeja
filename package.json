@@ -1,0 +1,22 @@
+{
+  "name": "sakakeja",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Skylar-blessing/SakaKeja.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Skylar-blessing/SakaKeja/issues"
+  },
+  "homepage": "https://github.com/Skylar-blessing/SakaKeja#readme",
+  "dependencies": {
+    "react-router-dom": "^6.14.2"
+  }
+}
