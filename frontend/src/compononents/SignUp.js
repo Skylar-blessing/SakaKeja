@@ -42,7 +42,7 @@ const SignUp = () => {
 
         alert('User created successfully!');
 
-        navigate('/');
+        navigate('/login');
       })
       .catch((error) => {
         console.error('Error creating user:', error);
