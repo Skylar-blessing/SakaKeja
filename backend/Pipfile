@@ -20,6 +20,7 @@ flask-restx = "*"
 sendgrid = "*"
 cloudinary = "*"
 pillow = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 

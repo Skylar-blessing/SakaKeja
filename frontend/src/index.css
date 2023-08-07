@@ -1,27 +1,4 @@
-<<<<<<< Updated upstream
-.search-container {
-    display: flex; /* Use Flexbox to display the components in a row */
-    align-items: center; /* Center items vertically */
-    justify-content: space-between; /* Distribute items evenly along the row */
-    width: 400px; /* Set the width to adjust as needed */
-    margin: 0 auto; /* Center the container horizontally */
-    padding: 10px;
-    border: 1px solid #ccc;
-  }
-  
-  .dropdown,
-  .search-input {
-    flex: 1; /* Allow these components to expand and fill the available space */
-    margin-right: 10px; /* Add some spacing between components */
-  }
-  
-  .filter-icon,
-  .search-icon {
-    margin-left: 10px; /* Add some spacing between components */
-    cursor: pointer; /* Add cursor pointer to indicate interactivity */
-  }
-  
-=======
+
 body, html {
   /* Set the height of body and html to 100% */
   height: 100%;
@@ -150,8 +127,6 @@ header {
   /* background-color: #9d6d3d; */
   color: #fff;
 }
-
-
 
 .search-container {
   display: flex; /* Use Flexbox to display the components in a row */
@@ -318,60 +293,138 @@ button {
 
 .about-us {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 100vh;
-  /* min-height: 100vh; */
-  /* width: 100%; */
-  background-color: #f9f9f9; 
+  padding: 100px 0;
 }
 
-/* About us component */
 .about-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
-  width: 100%;
-  min-height: 100vh;
-  background-color: #4CAF50;
-  color: #fff;
-  padding: 0;
-  margin: 0;
-}
-
-.about-image {
-  background-size: cover;
-  background-position: center;
-  width: 50%;
-  height: 70vh; 
-  min-height: 100vh;
-
+  width: 80%;
+  /* margin-bottom: 50px; */
 }
 
 .about-text {
   flex: 1;
-  padding: 20px;
+  padding: 0 20px;
+  background-color: #27563A;
+  color: #fff;
 }
 
-
-.about-text h2 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-}
-
-.about-text p {
-  font-size: 1.2rem;
-  line-height: 1.8;  
-  font-size: 22px;
-}
-
-h2,
-p {
-  margin: 0;
-  padding: 0;
+.about-image {
+  flex: 1;
+  height: 500px;
+  background-size: cover;
+  background-position: center;
 }
 
 
 
->>>>>>> Stashed changes
+
+/* PROPERTIES */
+.properties-container {
+    padding: 20px;
+  }
+  
+  .search-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .search-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .filter-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .left-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+  }
+  
+  .left-menu li {
+    margin-right: 15px;
+    cursor: pointer;
+  }
+  
+  .mid-left-filter {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .mid-left-filter label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .mid-left-filter input,
+  .mid-left-filter select {
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .properties {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .property-card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #fff;
+  }
+  
+  .property-card img {
+    width: 100%;
+    max-height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .property-details p {
+    margin: 5px 0;
+  }
+  
+  .logout-button {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+  
+  .logout-button button {
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
