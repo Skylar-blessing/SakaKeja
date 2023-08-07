@@ -4,6 +4,24 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+"sqlalchemy.orm" = "*"
+sqlalchemy-serializer = "*"
+flask-cors = "*"
+flask-restful = "*"
+flask-migrate = "*"
+flask-sqlalchemy = "*"
+flask = "*"
+faker = "*"
+psycopg2 = "*"
+migrate = "*"
+flask-jwt-extended = "*"
+flask-restplus = "*"
+flask-restx = "*"
+sendgrid = "*"
+cloudinary = "*"
+pillow = "*"
+jwt = "*"
+flask-mail = "*"
 
 [dev-packages]
 
