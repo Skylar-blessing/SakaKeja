@@ -4,6 +4,7 @@ import Login from './compononents/Login';
 import SignUp from './compononents/SignUp';
 import OwnerDashboard from './compononents/OwnerDashboard';
 import TenantDashboard from './compononents/TenantDashboard';
+import PropertyList from './compononents/PropertyList'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/owner-dashboard" element={<OwnerDashboard />} />
         <Route path="/tenant-dashboard" element={<TenantDashboard />} />
+        <Route path="/rent" element={<PropertyList />} />
       </Routes>
     </Router>
   );
