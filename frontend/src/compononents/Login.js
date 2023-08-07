@@ -82,22 +82,8 @@ function Login() {
         </div>
         <div className="sign-in-options">
           <p>Or sign in with:</p>
-          <button className="signin-google-button">
-            <img
-              src="/images/Google.png"
-              alt="Google Logo"
-              className="signin-icon"
-            />
-            Sign in with Google
-          </button>
-          <button className="signin-apple-button">
-            <img
-              src="/home/steve/Saka-Keja/SakaKeja/frontend/src/images/Apple.png"
-              alt="Apple Logo"
-              className="signin-icon"
-            />
-            Sign in with Apple
-          </button>
+          <button className="signin-google-button">Sign in with Google</button>
+          <button className="signin-apple-button">Sign in with Apple</button>
         </div>
         <div className="signup-option">
           <p>
