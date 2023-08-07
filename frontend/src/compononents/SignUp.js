@@ -67,16 +67,12 @@ const SignUp = () => {
           <button className="signup-button" type="submit">
             Sign Up
           </button>
-          <div className="sign-in-options">
+          <div className="sign-up-options">
             <p>Or sign up with:</p>
-            <button className="signin-google-button">
-              <img src="/images/Google.png" alt="Google Logo" className="signin-icon" />
-              Sign up with Google
-            </button>
-            <button className="signin-apple-button">
-              <img src="/path/to/apple.png" alt="Apple Logo" className="signin-icon" />
-              Sign up with Apple
-            </button>
+            <div className="signup-buttons-wrapper">
+                <button className="signup-google-button">Sign up with Google</button>
+                <button className="signup-apple-button">Sign up with Apple</button>
+            </div>
           </div>
         </form>
       </div>

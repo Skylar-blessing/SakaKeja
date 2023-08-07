@@ -5,16 +5,17 @@ import '../styles/Login.css';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
-  
+
     const loginData = {
       email,
       password,
     };
-  
+
     try {
       const response = await fetch('http://127.0.0.1:5000/login', {
         method: 'POST',
@@ -23,17 +24,17 @@ function Login() {
         },
         body: JSON.stringify(loginData),
       });
-  
+
       const data = await response.json();
-      console.log('Response data:', data); 
-  
+      console.log('Response data:', data);
+
       if (response.ok) {
         const refreshToken = data.refresh_token;
         const userType = Object.keys(data)[0];
-        console.log(userType)
-  
+        console.log(userType);
+
         saveRefreshToken(refreshToken);
-  
+
         if ('unverified' in data) {
           alert('Please verify your email before logging in.');
         } else if ('owner' in data || 'tenant' in data) {
@@ -48,6 +49,7 @@ function Login() {
       console.error('Error occurred during login:', error);
     }
   };
+
   const saveRefreshToken = (token) => {
     localStorage.setItem('refresh_token', token);
   };
@@ -65,15 +67,27 @@ function Login() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="input-field"
               />
             </div>
             <div className="password-container">
-              <label>Password:</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+            <div className="password-input">
+                <label>Password:</label>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="input-field"
+                />
+                <div className="show-password">
+                  <input
+                    type="checkbox"
+                    checked={showPassword}
+                    onChange={() => setShowPassword(!showPassword)}
+                  />
+                  <label className='text'>Show Password</label>
+                </div>
+              </div>
             </div>
             <button className="login-button" type="submit">
               Login
