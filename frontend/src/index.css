@@ -6,76 +6,92 @@ body, html {
 }
 
 /* Header.css */
-.Header {
+
+header {
+  /* background-color: #333; */
+  color: #fff;
+  padding: 1rem 0;
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  /* background-color: #f0f0f0; */
 }
 
-.LogoContainer {
+.logo-container {
   display: flex;
   align-items: center;
 }
 
-.Logo {
-  height: 40px;
+.logo {
+  width: 50px;
+  height: 50px;
   margin-right: 10px;
 }
 
-.LogoName {
+.logo-name {
   font-size: 40px;
   font-weight: bold;
   color: #fff;
 }
 
-.Navbar {
+.navbar {
   display: flex;
 }
 
-.Navbar ul {
+.navbar ul {
   list-style: none;
   display: flex;
 }
 
-.Navbar li {
+.navbar li {
   margin-left: 20px;
 }
 
-.Navbar a {
+.navbar a {
   text-decoration: none;
-  color: #333;
-  font-size: 20px;
-  color: aliceblue;
-}
-
-.Navbar a:hover {
-  color: #007bff;
-}
-
-
-/* login && :single-button */
-.AuthButtons {
-  display: flex;
-  align-items: center;
-}
-
-.loginButton,
-.signupButton {
-  margin-left: 20px;
-  padding: 8px 16px;
-  border: none;
-  background-color: transparent;
   color: #fff;
-  border-radius: 4px;
-  border: 1px;
+  transition: color 0.3s ease;
+  font-size: 20px;
+}
+
+.navbar a:hover {
+  color: rgb(27, 155, 27);
   cursor: pointer;
 }
 
-.signupButton {
-  background-color: rgb(10, 90, 30);
+.active {
+  color: #f1c40f;
+}
+
+
+
+/* login && :single-button */
+.auth-buttons {
+  display: flex;
+}
+
+.auth-button {
   margin-left: 10px;
+  background-color: rgb(58, 148, 58);
+  color: #333;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.auth {
+  font-size: 20px;
+}
+
+.auth-button:hover {
+  background-color: #e0b30e;
 }
 
 
@@ -95,6 +111,7 @@ body, html {
   justify-content: center;
   align-items: center;
   height: 100%;
+  margin-bottom: 50px;
 }
 
 .welcome h1 {
@@ -109,8 +126,6 @@ body, html {
   /* background-color: #9d6d3d; */
   color: #fff;
 }
-
-
 
 .search-container {
   display: flex; /* Use Flexbox to display the components in a row */
@@ -162,6 +177,20 @@ body, html {
   padding: 6px;
   border-radius: 50%;
 }
+/* Now, when you use the SearchComponent in your React app, the search container will have rounded corners, the search input will have a white background, the search icon will have a green background, and the filter icon will also be green and part of the search input. The dropdown menu will have a light-grey background. */
+
+
+
+
+
+
+
+
+
+
+  /* styles.css */
+
+/* Common styles for labels and buttons */
 label {
   font-family: 'Lily Script One', cursive;
 }
@@ -174,7 +203,7 @@ button {
   margin-top: 10px;
 }
 
-/* the SignUp component */
+/* Specific styles for the SignUp component */
 #sign-up-container {
   width: 400px;
   margin: 0 auto;
@@ -261,303 +290,162 @@ button {
   background-position: center;
 }
 
-/* LoginPage  */
-.login-container {
+.about-us {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-image: url('./images/bb.jpg');
+  width: 100%;
+}
+
+.about-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-items: stretch;
+  width: 100%;
+}
+
+.about-text {
+  flex: 1;
+  width: 50%;
+  padding: 40px;
+  background-color: #27563A;
+  color: #fff;
+  line-height: 1.9rem;
+  font-size: 20px;
+}
+
+.about-image {
+  flex: 1;
+  width: 50%;
+  height: 400px;
+  background-size: cover;
+  background-position: center;
+}
+
+/* PropertyExplore.css */
+
+.property-explore {
+  /* background-image: url('./images/ii.jpg');  */
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
-  background-clip: url;
-}
-
-.login-container h2 {
-  font-size: 40px;
-  color: #fff;
-  margin-bottom: 20px;
-}
-
-.login-container p {
-  font-size: 20px;
+  padding: 80px 0;
   text-align: center;
-  color: #fff;
-  margin-bottom: 30px;
+  /* color: #fff; */
 }
 
-.user-type-dropdown {
+.property-list {
   display: flex;
-  align-items: center;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 40px;
 }
 
-.user-type-dropdown label {
-  font-size: 20px;
-  color: #fff;
-  margin-right: 10px;
+.property-card {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 300px;
+  transition: transform 0.3s ease-in-out;
 }
 
-.user-type-dropdown select {
-  padding: 8px;
-  border: 1px solid #fff;
-  border-radius: 5px;
-  background-color: hsl(211, 49%, 58%);
-  color: #fff;
-  font-size: 16px;
+.property-card:hover {
+  transform: translateY(-5px);
 }
 
-.login-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 400px;
+.property-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 1px solid #e0e0e0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.property-details {
   padding: 20px;
-  border: 1px solid #fff;
-  border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.8);
 }
 
-.email-container,
-.password-container,
-.remember-me-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.email-container label,
-.password-container label,
-.remember-me-container label {
-  font-size: 18px;
-  color: #333;
-}
-
-.email-container input,
-.password-container input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-.remember-me-container input {
-  margin-right: 10px;
-}
-
-.login-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.sign-in-options {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.sign-in-options p {
-  font-size: 16px;
-  color: #333;
+.property-details h3 {
+  font-size: 20px;
   margin-bottom: 10px;
 }
 
-.google-sign-in,
-.apple-sign-in {
+.property-details p {
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .property-card {
+    width: 100%;
+  }
+}
+
+.search-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  font-size: 18px;
-  color: #fff;
-  cursor: pointer;
-}
-
-.google-sign-in {
-  background-color: #4CAF50;
-}
-
-.apple-sign-in {
-  background-color: #333;
-  margin-top: 10px;
-}
-
-.signup-option {
-  font-size: 16px;
-  color: #333;
-  margin-top: 20px;
-}
-
-.signup-option a {
-  color: #007bff;
-}
-
-
-/* Signup page */
-.signup-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-image: url('./images/ee.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-  min-height: 100vh;
-  background-clip: url;
-}
-
-.signup-container h2 {
-  font-size: 40px;
-  color: #fff;
   margin-bottom: 20px;
 }
 
-.user-type-dropdown {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.user-type-dropdown label {
-  font-size: 20px;
-  color: #fff;
+.filter-select {
   margin-right: 10px;
 }
 
-.user-type-dropdown select {
-  padding: 8px;
-  border: 1px solid #fff;
-  border-radius: 5px;
-  background-color: hsl(211, 49%, 58%);
-  color: #fff;
-  font-size: 16px;
+.filter-input {
+  margin-right: 10px;
 }
 
-.signup-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 400px;
-  padding: 20px;
-  border: 1px solid #fff;
-  border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.8);
-}
-
-.name-container,
-.email-container,
-.password-container,
-.terms-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.name-container label,
-.email-container label,
-.password-container label,
-.terms-container label {
-  font-size: 18px;
-  color: #333;
-}
-
-.name-container input,
-.email-container input,
-.password-container input {
-  width: 100%;
-  padding: 8px;
+.filter-select select,
+.filter-input input {
+  padding: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-size: 16px;
 }
 
-.terms-container input {
-  margin-right: 10px;
-}
-
-.signup-button {
-  width: 100%;
-  padding: 10px;
+.search-icon {
+  cursor: pointer;
   background-color: #007bff;
-  color: #fff;
-  border: none;
+  color: white;
+  padding: 8px 12px;
   border-radius: 5px;
-  font-size: 18px;
-  cursor: pointer;
 }
 
-.signup-options {
+.property-card {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  text-align: left;
+  background-color: white;
+  transition: transform 0.2s ease;
+}
+
+.property-card:hover {
+  transform: translateY(-5px);
+}
+
+.carousel-container {
+  max-width: 100%;
+}
+
+.slide-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.signup-options p {
-  font-size: 16px;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.google-signup,
-.apple-signup {
-  display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  font-size: 18px;
-  color: #fff;
-  cursor: pointer;
 }
 
-.google-signup {
-  background-color: #4CAF50;
-  background-image: url('https://www.shutterstock.com/image-vector/google-popular-realistic-social-media-logotype-2275269793'); 
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
+.slide-image {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: cover;
 }
 
-.apple-signup {
-  background-color: #333;
-  margin-top: 10px;
-  background-image: url('https://www.shutterstock.com/image-photo/valencia-spain-march-05-2017-apple-593485994'); 
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-}
 
-.signin-option {
-  font-size: 16px;
-  color: #333;
-  margin-top: 20px;
-}
 
-.signin-option a {
-  color: #007bff;
-}
-
-/* PropertiesPage.css */
+/* PROPERTIES after login
 .properties-container {
   display: flex;
   flex-direction: column;
@@ -690,4 +578,4 @@ button {
   border-radius: 5px;
   font-size: 18px;
   cursor: pointer;
-}
+}  */

@@ -212,15 +212,6 @@ class Login(Resource):
         print(f"Successful login")
         access_token, refresh_token = create_token(user.id, user.user_type)
         return make_response(jsonify({user.user_type: access_token, "refresh_token": refresh_token}), 200)
-    
-@api.route('/protected')
-class ProtectedResource(Resource):
-    @jwt_required()
-    @api.doc(description='Protected resource that requires authentication')
-    def get(self):
-        current_user_id = get_jwt_identity()
-        user = User.query.get(current_user_id)
-        return make_response(jsonify({"user": user.to_dict()}), 200)
 
 
 class IndexResource(Resource):

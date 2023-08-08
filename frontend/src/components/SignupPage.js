@@ -8,6 +8,7 @@ const SignupPage = () => {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const handleSignup = () => {
+    // Log user input data
     console.log('User Type:', userType);
     console.log('Name:', name);
     console.log('Email:', email);
@@ -71,8 +72,8 @@ const SignupPage = () => {
       <div className="signin-option">
         <p>Have an account? <a href="/login">Sign In</a></p>
       </div>
-      <div className="google-logo">Logo</div>
-      <div className="apple-logo">Logo</div>
+      <div className="google-logo">Google Logo</div>
+      <div className="apple-logo">Apple Logo</div>
     </div>
   );
 };

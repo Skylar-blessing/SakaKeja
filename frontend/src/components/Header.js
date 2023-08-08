@@ -1,47 +1,87 @@
-// Header.js
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Link as ScrollLink } from 'react-scroll';
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const handleLoginClick = () => {
+    navigate('/login');
+  };
+
+  const handleSignupClick = () => {
+    navigate('/signup');
+  };
+
   return (
-    <header className="Header">
-      <div className="LogoContainer">
-        <span className="LogoName">Saka-Keja</span>
-      </div>
-      <nav className="Navbar">
-        <ul>
-          <li>
-            <a href="#home">Home</a>
-          </li>
-          <li>
-            <a href="#about">About Us</a>
-          </li>
-          {/* Remove one of the properties buttons from the header */}
-          {/* <li>
-            <a href="#properties">Properties</a>
-          </li> */}
-          <li>
-            {/* Add the property button to navigate to the properties page */}
-            <Link to="/properties">Properties</Link>
-          </li>
-          <li>
-            <a href="#blog">Blog</a>
-          </li>
-          <li>
-            <a href="#contact">Contact Us</a>
-          </li>
-        </ul>
-      </nav>
-      <div className="AuthButtons">
-        <Link to="/login">
-          <button className="loginButton">Login</button>
-        </Link>
-        <Link to="/signup">
-          <button className="signupButton">Sign Up</button>
-        </Link>
-        <Link to="/about">
-          <button className="aboutButton">About</button>
-        </Link>
+    <header>
+      <div className="header-container">
+        <div className="logo-container">
+          <span className="logo-name">SakaKeja</span>
+        </div>
+        <nav className="navbar">
+          <ul>
+            <li>
+              <ScrollLink
+                to="home"
+                spy={true}
+                smooth={true}
+                offset={-70}
+                duration={500}
+              >
+                Home
+              </ScrollLink>
+            </li>
+            <li>
+              <ScrollLink
+                to="about-us"
+                spy={true}
+                smooth={true}
+                offset={-70}
+                duration={500}
+              >
+                Our Company
+              </ScrollLink>
+            </li>
+            <li>
+              <ScrollLink
+                to="property-explore"
+                spy={true}
+                smooth={true}
+                offset={-70}
+                duration={1000}
+              >
+                Properties
+              </ScrollLink>
+            </li>
+            <li>
+              <ScrollLink
+                to="blog"
+                spy={true}
+                smooth={true}
+                offset={-70}
+                duration={500}
+              >
+                Blog
+              </ScrollLink>
+            </li>
+            <li>
+              <ScrollLink
+                to="contact-us"
+                spy={true}
+                smooth={true}
+                offset={-70}
+                duration={500}
+              >
+                Contact Us
+              </ScrollLink>
+            </li>
+          </ul>
+        </nav>
+        <div className="auth-buttons">
+          <button className="auth-button" onClick={handleLoginClick}>Login</button>
+          <button className="auth-button" onClick={handleSignupClick}>Sign Up</button>
+        </div>
       </div>
     </header>
   );
