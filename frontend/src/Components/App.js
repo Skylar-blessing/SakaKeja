@@ -1,14 +1,14 @@
 import React from 'react';
 import Main from './Main'
 import AboutUs from './OurCompany';
-import PropertiesPage from './PropertiesPage';
+import PropertyExplore from './PropertyExplore';
 
 const App = () => {
   return (
     <div>
       <Main />
       <AboutUs />
-      <PropertiesPage />
+      <PropertyExplore />
       {/* Other sections/components */}
     </div>
   );
