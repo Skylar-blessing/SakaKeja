@@ -12,7 +12,9 @@ function MoversCard({ mover, handleBookService }) {
       <div className="button-container">
         <button onClick={() => handleBookService(mover.id)}>Book Service</button>
         {mover.isBooked && (
-          <p>The status of moving your items is: {mover.status}</p>
+          <p>Thank you for booking with us,
+            The status of moving your items is: {mover.status}.
+            We will notify you when complete</p>
         )}
       </div>
     </div>
