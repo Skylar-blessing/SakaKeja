@@ -1,14 +1,15 @@
 import React from 'react';
+import '../styles/MoversCard.css';
 
 function MoversCard({ mover, handleBookService }) {
   return (
-    <div style={{ border: '1px solid #ddd', padding: '10px', width: '300px' }}>
-      <div style={{ marginBottom: '10px', height: '150px', backgroundColor: '#eee', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <span style={{ fontSize: '24px' }}>Logo</span>
+    <div className="card">
+      <div className="logo-placeholder">
+        {mover.image ? <img src={mover.image} alt={mover.name} /> : 'Logo'}
       </div>
       <h2>{mover.name}</h2>
-      <p>Service: {mover.service}</p>
-      <div>
+      <p className="service-info">Service: {mover.service}</p>
+      <div className="button-container">
         <button onClick={() => handleBookService(mover.id)}>Book Service</button>
         {mover.isBooked && (
           <p>The status of moving your items is: {mover.status}</p>
