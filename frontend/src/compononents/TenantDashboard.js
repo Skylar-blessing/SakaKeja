@@ -82,10 +82,10 @@ function TenantDashboard() {
             <div onClick={handleMoversClick} style={{ cursor: 'pointer' }}>Movers</div>
           </li>
           <li style={{ marginBottom: '10px' }}>
-            <div onClick={handleSettingsClick} style={{ cursor: 'pointer' }}>Settings</div>
+            <div onClick={handlePaymentsClick} style={{ cursor: 'pointer' }}>Payments</div>
           </li>
           <li style={{ marginBottom: '10px' }}>
-            <div onClick={handlePaymentsClick} style={{ cursor: 'pointer' }}>Payments</div>
+            <div onClick={handleSettingsClick} style={{ cursor: 'pointer' }}>Settings</div>
           </li>
           <li style={{ marginBottom: '10px' }}>
             <button onClick={handleLogout} style={{ background: '#3A5B22', color: 'white', border: 'none', cursor: 'pointer', padding: '5px 10px' }}>Logout</button>
