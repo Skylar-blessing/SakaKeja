@@ -209,7 +209,11 @@ class Login(Resource):
 
         print(f"Successful login")
         access_token, refresh_token = create_token(user.id, user.user_type)
-        return make_response(jsonify({user.user_type: access_token, "refresh_token": refresh_token}), 200)
+        return make_response(jsonify({
+            "user_id": user.id,
+            user.user_type: access_token,
+            "refresh_token": refresh_token
+        }), 200)
     
 @api.route('/protected')
 class ProtectedResource(Resource):
@@ -227,7 +231,7 @@ class IndexResource(Resource):
 
 api.add_resource(IndexResource, '/')
 
-DEFAULT_PAGE_SIZE = 10
+DEFAULT_PAGE_SIZE = 12
 
 @api.route('/users')
 class Users(Resource):
@@ -261,6 +265,7 @@ class Users(Resource):
 
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
+            print("Email already exists")
             return make_response(jsonify({"error": "Email already exists"}), 400)
 
         new_user = User(
@@ -574,8 +579,15 @@ class MoveAssistances(Resource):
     @api.doc(description='Create a new move assistance', body=move_assistance_model)
     def post(self):
         data = request.get_json()
+
+        image_url = ""
+        if 'image' in data:
+            uploaded_image = cloudinary.uploader.upload(data['image'])
+            image_url = uploaded_image['secure_url']
+
         new_move = MoveAssistance(
             service_details=data['service_details'],
+            image=image_url,
             status=data['status'],
             tenant_id=data['tenant_id']
         )

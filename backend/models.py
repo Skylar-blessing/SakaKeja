@@ -131,6 +131,7 @@ class MoveAssistance(db.Model, SerializerMixin):
     __tablename__ = 'move_assistance'
     id = db.Column(db.Integer, primary_key=True)
     service_details = db.Column(db.String)
+    image = db.Column(db.String)
     status = db.Column(db.String(20))
     
     tenant_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
@@ -139,6 +140,7 @@ class MoveAssistance(db.Model, SerializerMixin):
         return {
             'id': self.id,
             'service_details': self.service_details,
+            'image': self.image,
             'status': self.status,
             'tenant_id': self.tenant_id,
         }
