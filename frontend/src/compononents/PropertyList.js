@@ -17,14 +17,18 @@ function PropertyList() {
       .catch((error) => console.error('Error fetching properties:', error));
   }, []);
 
+  const propertyCardsContainerStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    gap: '20px',
+    justifyItems: 'center',
+  };
+
   return (
-    <div className="property-list">
-      <h2>Available Properties for Rent</h2>
-      <div className="property-cards">
-        {properties.map((property) => (
-          <PropertyCard key={property.id} property={property} />
-        ))}
-      </div>
+    <div style={propertyCardsContainerStyle}>
+      {properties.map((property) => (
+        <PropertyCard key={property.id} property={property} />
+      ))}
     </div>
   );
 }
