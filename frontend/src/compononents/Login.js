@@ -75,7 +75,7 @@ function Login() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="input-field"
+                className="email-input"
               />
             </div>
             <div className="password-container">

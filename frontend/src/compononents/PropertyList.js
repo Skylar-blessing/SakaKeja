@@ -8,9 +8,8 @@ function PropertyList() {
     fetch('http://127.0.0.1:5000/properties')
       .then((response) => response.json())
       .then((data) => {
-        // Check if 'data' is an object with 'data' property containing the array
         if (data && Array.isArray(data.data)) {
-          setProperties(data.data); // Set the array of properties in the state
+          setProperties(data.data);
         } else {
           console.error('Invalid data format received from API:', data);
         }

@@ -7,11 +7,10 @@
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 100%;
   }
 
   .login-button {
-    width: 155%;
+    width: 106%;
     max-width: 500px;
     background-color: #3A5B22;
     color: white;
@@ -20,7 +19,7 @@
     margin-top: 10px;
     cursor: pointer;
     border-radius: 5px;
-    margin-left: 90px;
+    margin-left: -40px;
   }
   
   
@@ -93,3 +92,7 @@
   margin-left:-120px;
   font-size: 13px;
 }
+.email-input {
+  max-width: 90%;
+}
+
