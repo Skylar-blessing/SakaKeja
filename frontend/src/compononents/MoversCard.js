@@ -8,7 +8,7 @@ function MoversCard({ mover, handleBookService }) {
         {mover.image ? <img src={mover.image} alt={mover.name} /> : 'Logo'}
       </div>
       <h2>{mover.name}</h2>
-      <p className="service-info">Service: {mover.service}</p>
+      <p className="service-info">{mover.service_details}</p>
       <div className="button-container">
         <button onClick={() => handleBookService(mover.id)}>Book Service</button>
         {mover.isBooked && (
