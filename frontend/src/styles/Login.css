@@ -46,13 +46,10 @@
   }
 
   .sign-in-options {
-    margin-left: 90px;
     text-align: center;
   }
   
-  h2{
-    margin-left: 80px;
-  }
+ 
 
   .signin-google-button {
     background-image: url('../images/Google.png');

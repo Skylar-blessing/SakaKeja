@@ -66,7 +66,7 @@ function Login() {
     <div className="login-container">
       <div className="left-half">
         <h2>Welcome back!</h2>
-        <p>Enter your credentials to access your account</p>
+        <p>Enter your credentials for Access your account</p>
         <div className="login-form">
           <form onSubmit={handleLogin}>
             <div className="email-container">
