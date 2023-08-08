@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropertyList from './PropertyList';
 import Movers from './Movers';
 import Settings from './Settings';
 import Payments from './Payments';
 
 function TenantDashboard() {
+  const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [showPropertyList, setShowPropertyList] = useState(false);
   const [showMovers, setShowMovers] = useState(false);
@@ -64,6 +66,11 @@ function TenantDashboard() {
     setShowSettings(false);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('user_id');
+    navigate('/login');
+  };
+
   return (
     <div style={{ display: 'flex' }}>
       <div style={{ width: '20%', height: '100vh', backgroundColor: '#f7f7f7', padding: '20px' }}>
@@ -79,6 +86,9 @@ function TenantDashboard() {
           </li>
           <li style={{ marginBottom: '10px' }}>
             <div onClick={handlePaymentsClick} style={{ cursor: 'pointer' }}>Payments</div>
+          </li>
+          <li style={{ marginBottom: '10px' }}>
+            <button onClick={handleLogout} style={{ background: '#3A5B22', color: 'white', border: 'none', cursor: 'pointer', padding: '5px 10px' }}>Logout</button>
           </li>
         </ul>
       </div>
