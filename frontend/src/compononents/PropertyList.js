@@ -20,9 +20,11 @@ function PropertyList() {
   return (
     <div className="property-list">
       <h2>Available Properties for Rent</h2>
-      {properties.map((property) => (
-        <PropertyCard key={property.id} property={property} />
-      ))}
+      <div className="property-cards">
+        {properties.map((property) => (
+          <PropertyCard key={property.id} property={property} />
+        ))}
+      </div>
     </div>
   );
 }
