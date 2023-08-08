@@ -73,7 +73,7 @@ function TenantDashboard() {
 
   return (
     <div style={{ display: 'flex' }}>
-      <div style={{ width: '20%', height: '100vh', backgroundColor: '#f7f7f7', padding: '20px' }}>
+      <div style={{ width: '20%', height: '100vh', backgroundColor: '#dcdcdc', padding: '20px' }}>
         <ul style={{ listStyleType: 'none', padding: 0 }}>
           <li style={{ marginBottom: '10px' }}>
             <div onClick={handleRentClick} style={{ cursor: 'pointer' }}>Rent</div>
