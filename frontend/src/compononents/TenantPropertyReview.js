@@ -4,13 +4,15 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 function TenantPropertyReview() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const propertyId = location.state?.propertyId;
-  const [property, setProperty] = useState(null);
-  const [showOwnerDetails, setShowOwnerDetails] = useState(false);
-  const [ownerDetails, setOwnerDetails] = useState(null);
-  const [reviews, setReviews] = useState([]);
+    const location = useLocation();
+    const navigate = useNavigate();
+    const propertyId = location.state?.propertyId;
+    const [property, setProperty] = useState(null);
+    const [showOwnerDetails, setShowOwnerDetails] = useState(false);
+    const [ownerDetails, setOwnerDetails] = useState(null);
+    const [reviews, setReviews] = useState([]);
+    const [newReviewText, setNewReviewText] = useState('');
+    const [newReviewRating, setNewReviewRating] = useState(1);
 
   useEffect(() => {
     if (propertyId) {
@@ -76,6 +78,39 @@ function TenantPropertyReview() {
     setShowOwnerDetails(true);
   };
 
+  const handleReviewSubmit = async () => {
+    const token = localStorage.getItem('access_token');
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    };
+
+    const newReviewData = {
+      review_text: newReviewText,
+      rating: newReviewRating,
+      tenant_id: ownerDetails.id, // Assuming you have ownerDetails fetched
+      property_id: property.id,
+    };
+
+    try {
+      const response = await fetch('http://127.0.0.1:5000/reviews', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(newReviewData),
+      });
+
+      if (response.ok) {
+        const newReview = await response.json();
+        setReviews([...reviews, newReview]);
+        setNewReviewText('');
+        setNewReviewRating(1);
+      } else {
+        console.error('Error submitting review:', response);
+      }
+    } catch (error) {
+      console.error('Error submitting review:', error);
+    }
+  };
   return (
     <div>
       {property ? (
@@ -125,6 +160,28 @@ function TenantPropertyReview() {
                 <p>No reviews available.</p>
               )}
             </div>
+          </div>
+          <div>
+            <h3>Write a Review</h3>
+            <textarea
+              placeholder="Enter your review..."
+              value={newReviewText}
+              onChange={(e) => setNewReviewText(e.target.value)}
+            />
+            <div>
+              <label>Rating:</label>
+              <select
+                value={newReviewRating}
+                onChange={(e) => setNewReviewRating(e.target.value)}
+              >
+                <option value={1}>1 star</option>
+                <option value={2}>2 stars</option>
+                <option value={3}>3 stars</option>
+                <option value={4}>4 stars</option>
+                <option value={5}>5 stars</option>
+              </select>
+            </div>
+            <button onClick={handleReviewSubmit}>Submit Review</button>
           </div>
         </div>
       ) : (
