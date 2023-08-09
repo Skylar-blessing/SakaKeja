@@ -10,12 +10,12 @@ function Login() {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-  
+
     const loginData = {
       email,
       password,
     };
-  
+
     try {
       const response = await fetch('http://127.0.0.1:5000/login', {
         method: 'POST',
@@ -24,28 +24,25 @@ function Login() {
         },
         body: JSON.stringify(loginData),
       });
-  
+
       const data = await response.json();
-      console.log('Response data:', data);
-  
+
       if (response.ok) {
         const refreshToken = data.refresh_token;
-        const userType = Object.keys(data)[0];
-        console.log(userType);
-  
         saveRefreshToken(refreshToken);
-  
+
         if ('unverified' in data) {
           alert('Please verify your email before logging in.');
         } else if ('owner' in data || 'tenant' in data) {
           const userType = data.owner ? 'owner' : 'tenant';
           localStorage.setItem('user_type', userType);
-  
-          
+
           if ('user_id' in data) {
             localStorage.setItem('user_id', data.user_id);
           }
-  
+          localStorage.setItem('access_token', data[userType]);
+          console.log(data)
+
           navigate(`/${userType}-dashboard`);
         } else {
           alert('Unknown user type. Please contact support.');
