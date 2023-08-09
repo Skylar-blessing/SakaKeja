@@ -7,9 +7,10 @@ function TenantPropertyReview() {
   const location = useLocation();
   const navigate = useNavigate();
   const propertyId = location.state?.propertyId;
-  const [propertyDetails, setPropertyDetails] = useState(null);
+  const [property, setProperty] = useState(null);
   const [showOwnerDetails, setShowOwnerDetails] = useState(false);
   const [ownerDetails, setOwnerDetails] = useState(null);
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     if (propertyId) {
@@ -18,7 +19,7 @@ function TenantPropertyReview() {
           const response = await fetch(`http://127.0.0.1:5000/properties/${propertyId}`);
           const data = await response.json();
           if (response.ok) {
-            setPropertyDetails(data);
+            setProperty(data);
           } else {
             console.error('Error fetching property details:', data);
           }
@@ -32,10 +33,10 @@ function TenantPropertyReview() {
   }, [propertyId]);
 
   useEffect(() => {
-    if (propertyDetails && propertyDetails.owner_id) {
+    if (property && property.owner_id) {
       const fetchOwnerDetails = async () => {
         try {
-          const response = await fetch(`http://127.0.0.1:5000/users/${propertyDetails.owner_id}`);
+          const response = await fetch(`http://127.0.0.1:5000/users/${property.owner_id}`);
           const data = await response.json();
           if (response.ok) {
             setOwnerDetails(data);
@@ -49,7 +50,27 @@ function TenantPropertyReview() {
 
       fetchOwnerDetails();
     }
-  }, [propertyDetails]);
+  }, [property]);
+
+  useEffect(() => {
+    if (propertyId) {
+      const fetchPropertyReviews = async () => {
+        try {
+          const response = await fetch(`http://127.0.0.1:5000/reviews?property_id=${propertyId}`);
+          const data = await response.json();
+          if (response.ok && Array.isArray(data)) {
+            setReviews(data);
+          } else {
+            console.error('Error fetching property reviews:', data);
+          }
+        } catch (error) {
+          console.error('Error fetching property reviews:', error);
+        }
+      };
+
+      fetchPropertyReviews();
+    }
+  }, [propertyId]);
 
   const handleBookClick = () => {
     setShowOwnerDetails(true);
@@ -57,7 +78,7 @@ function TenantPropertyReview() {
 
   return (
     <div>
-      {propertyDetails ? (
+      {property ? (
         <div>
           <div className="carousel-container">
             <Carousel
@@ -65,7 +86,7 @@ function TenantPropertyReview() {
               showStatus={false}
               infiniteLoop={true}
             >
-              {propertyDetails.image_urls.reverse().map((imageUrl, index) => (
+              {property.image_urls.reverse().map((imageUrl, index) => (
                 <div key={index} className="slide-container">
                   <div className="image-holder">
                     <img src={imageUrl} alt={`Property ${index + 1}`} className="slide-image" />
@@ -75,11 +96,11 @@ function TenantPropertyReview() {
             </Carousel>
           </div>
           <div>
-            <h2>{propertyDetails.location}</h2>
-            <p>Price: ${propertyDetails.price}</p>
-            <p>Number of Rooms: {propertyDetails.number_of_rooms}</p>
-            <p>Description: {propertyDetails.description}</p>
-            <p>Category: {propertyDetails.category}</p>
+            <h2>{property.location}</h2>
+            <p>Price: ${property.price}</p>
+            <p>Number of Rooms: {property.number_of_rooms}</p>
+            <p>Description: {property.description}</p>
+            <p>Category: {property.category}</p>
             {showOwnerDetails && ownerDetails && (
               <div>
                 <p>Owner: {ownerDetails.first_name}</p>
@@ -88,6 +109,18 @@ function TenantPropertyReview() {
             )}
             <button onClick={() => navigate('/payments')} style={{ background: '#3A5B22', color: 'white', border: 'none', cursor: 'pointer', padding: '5px 10px' }}>Pay</button>
             <button onClick={handleBookClick} style={{ background: '#3A5B22', color: 'white', border: 'none', cursor: 'pointer', padding: '5px 10px' }}>Book</button>
+            <div>
+              <h3>Reviews</h3>
+              {reviews.length > 0 ? (
+                <ul>
+                  {reviews.map((review) => (
+                    <li key={review.id}>{review.comment}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No reviews available.</p>
+              )}
+            </div>
           </div>
         </div>
       ) : (
