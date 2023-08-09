@@ -114,7 +114,11 @@ function TenantPropertyReview() {
               {reviews.length > 0 ? (
                 <ul>
                   {reviews.map((review) => (
-                    <li key={review.id}>{review.review_text}</li>
+                    <li key={review.id}>
+                      <p>Review by: {review.tenant.first_name}</p>
+                      <p>Rating: {review.rating} stars</p>
+                      <p>{review.review_text}</p>
+                    </li>
                   ))}
                 </ul>
               ) : (
