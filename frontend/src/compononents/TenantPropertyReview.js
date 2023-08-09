@@ -58,8 +58,8 @@ function TenantPropertyReview() {
         try {
           const response = await fetch(`http://127.0.0.1:5000/reviews?property_id=${propertyId}`);
           const data = await response.json();
-          if (response.ok && Array.isArray(data)) {
-            setReviews(data);
+          if (response.ok && Array.isArray(data.data)) {
+            setReviews(data.data);
           } else {
             console.error('Error fetching property reviews:', data);
           }
@@ -67,7 +67,7 @@ function TenantPropertyReview() {
           console.error('Error fetching property reviews:', error);
         }
       };
-
+  
       fetchPropertyReviews();
     }
   }, [propertyId]);
@@ -114,7 +114,7 @@ function TenantPropertyReview() {
               {reviews.length > 0 ? (
                 <ul>
                   {reviews.map((review) => (
-                    <li key={review.id}>{review.comment}</li>
+                    <li key={review.id}>{review.review_text}</li>
                   ))}
                 </ul>
               ) : (
