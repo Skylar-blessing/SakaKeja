@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 function TenantPropertyReview() {
-  const location = useLocation(); // Get the location object from React Router
-  const propertyId = location.state?.propertyId; // Access property ID from location state
+  const location = useLocation();
+  const navigate = useNavigate();
+  const propertyId = location.state?.propertyId;
   const [property, setProperty] = useState(null);
+  const [showOwnerDetails, setShowOwnerDetails] = useState(false);
+  const [ownerDetails, setOwnerDetails] = useState(null);
 
   useEffect(() => {
     if (propertyId) {
@@ -24,9 +27,30 @@ function TenantPropertyReview() {
         }
       };
 
+      const fetchOwnerDetails = async () => {
+        if (property && property.owner_id) {
+          try {
+            const response = await fetch(`http://127.0.0.1:5000/users/${property.owner_id}`);
+            const data = await response.json();
+            if (response.ok) {
+              setOwnerDetails(data);
+            } else {
+              console.error('Error fetching owner details:', data);
+            }
+          } catch (error) {
+            console.error('Error fetching owner details:', error);
+          }
+        }
+      };
+
       fetchPropertyDetails();
+      fetchOwnerDetails();
     }
-  }, [propertyId]);
+  }, [propertyId, property]);
+
+  const handleBookClick = () => {
+    setShowOwnerDetails(true);
+  };
 
   return (
     <div>
@@ -48,13 +72,19 @@ function TenantPropertyReview() {
             </Carousel>
           </div>
           <div>
-            {/* Render property details here */}
             <h2>{property.location}</h2>
             <p>Price: ${property.price}</p>
             <p>Number of Rooms: {property.number_of_rooms}</p>
             <p>Description: {property.description}</p>
             <p>Category: {property.category}</p>
-            {/* Add more details as needed */}
+            {showOwnerDetails && ownerDetails && (
+              <div>
+                <p>Owner: {ownerDetails.first_name}</p>
+                <p>Phone Number: {ownerDetails.phone_number}</p>
+              </div>
+            )}
+            <button onClick={() => navigate('/payments')} style={{ background: '#3A5B22', color: 'white', border: 'none', cursor: 'pointer', padding: '5px 10px' }}>Pay</button>
+            <button onClick={handleBookClick} style={{ background: '#3A5B22', color: 'white', border: 'none', cursor: 'pointer', padding: '5px 10px' }}>Book</button>
           </div>
         </div>
       ) : (
