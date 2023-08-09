@@ -8,11 +8,12 @@ function PropertyCard({ property }) {
   const navigate = useNavigate();  
 
   const handleCardClick = () => {
-    navigate('/tenant-property-review'); 
+    navigate(`/tenant-property-review`, { state: { propertyId: property.id } }); // Pass property ID as location state
   };
 
+
   return (
-    <div className="property-card" >
+    <div className="property-card">
       <div className="carousel-container">
         <Carousel
           showThumbs={false}
