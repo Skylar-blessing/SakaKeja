@@ -8,6 +8,7 @@ import PropertyList from './compononents/PropertyList';
 import PostProperty from './compononents/PostProperty';
 import ViewProperties from './compononents/ViewProperties';
 import ViewPaymentBalance from './compononents/ViewPaymentBalance';
+import TenantPropertyReview from './compononents/TenantPropertyReview';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/post-property" element={<PostProperty />} />
         <Route path="/view-properties" element={<ViewProperties />} />
         <Route path="/view-payment-balance" element={<ViewPaymentBalance />} />
+        <Route path="/tenant-property-review" element={<TenantPropertyReview />} />
       </Routes>
     </Router>
   );

@@ -1,11 +1,18 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; 
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import '../styles/PropertyCard.css';
 
 function PropertyCard({ property }) {
+  const navigate = useNavigate();  
+
+  const handleCardClick = () => {
+    navigate('/tenant-property-review'); 
+  };
+
   return (
-    <div className="property-card">
+    <div className="property-card" >
       <div className="carousel-container">
         <Carousel
           showThumbs={false}
@@ -27,7 +34,7 @@ function PropertyCard({ property }) {
         <p>Number of Rooms: {property.number_of_rooms}</p>
         <p>Description: {property.description}</p>
         <p>Category: {property.category}</p>
-        <button style={{ background: '#3A5B22', color: 'white', border: 'none', cursor: 'pointer', padding: '5px 10px' }}>Rent</button>
+        <button onClick={handleCardClick} style={{ background: '#3A5B22', color: 'white', border: 'none', cursor: 'pointer', padding: '5px 10px' }}>View</button>
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ import Payments from './Payments';
 function TenantDashboard() {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
-  const [showPropertyList, setShowPropertyList] = useState(false);
+  const [showPropertyList, setShowPropertyList] = useState(true);
   const [showMovers, setShowMovers] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showPayments, setShowPayments] = useState(false);
