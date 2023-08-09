@@ -7,7 +7,7 @@ function TenantPropertyReview() {
   const location = useLocation();
   const navigate = useNavigate();
   const propertyId = location.state?.propertyId;
-  const [property, setProperty] = useState(null);
+  const [propertyDetails, setPropertyDetails] = useState(null);
   const [showOwnerDetails, setShowOwnerDetails] = useState(false);
   const [ownerDetails, setOwnerDetails] = useState(null);
 
@@ -18,7 +18,7 @@ function TenantPropertyReview() {
           const response = await fetch(`http://127.0.0.1:5000/properties/${propertyId}`);
           const data = await response.json();
           if (response.ok) {
-            setProperty(data);
+            setPropertyDetails(data);
           } else {
             console.error('Error fetching property details:', data);
           }
@@ -27,26 +27,29 @@ function TenantPropertyReview() {
         }
       };
 
+      fetchPropertyDetails();
+    }
+  }, [propertyId]);
+
+  useEffect(() => {
+    if (propertyDetails && propertyDetails.owner_id) {
       const fetchOwnerDetails = async () => {
-        if (property && property.owner_id) {
-          try {
-            const response = await fetch(`http://127.0.0.1:5000/users/${property.owner_id}`);
-            const data = await response.json();
-            if (response.ok) {
-              setOwnerDetails(data);
-            } else {
-              console.error('Error fetching owner details:', data);
-            }
-          } catch (error) {
-            console.error('Error fetching owner details:', error);
+        try {
+          const response = await fetch(`http://127.0.0.1:5000/users/${propertyDetails.owner_id}`);
+          const data = await response.json();
+          if (response.ok) {
+            setOwnerDetails(data);
+          } else {
+            console.error('Error fetching owner details:', data);
           }
+        } catch (error) {
+          console.error('Error fetching owner details:', error);
         }
       };
 
-      fetchPropertyDetails();
       fetchOwnerDetails();
     }
-  }, [propertyId, property]);
+  }, [propertyDetails]);
 
   const handleBookClick = () => {
     setShowOwnerDetails(true);
@@ -54,7 +57,7 @@ function TenantPropertyReview() {
 
   return (
     <div>
-      {property ? (
+      {propertyDetails ? (
         <div>
           <div className="carousel-container">
             <Carousel
@@ -62,7 +65,7 @@ function TenantPropertyReview() {
               showStatus={false}
               infiniteLoop={true}
             >
-              {property.image_urls.reverse().map((imageUrl, index) => (
+              {propertyDetails.image_urls.reverse().map((imageUrl, index) => (
                 <div key={index} className="slide-container">
                   <div className="image-holder">
                     <img src={imageUrl} alt={`Property ${index + 1}`} className="slide-image" />
@@ -72,11 +75,11 @@ function TenantPropertyReview() {
             </Carousel>
           </div>
           <div>
-            <h2>{property.location}</h2>
-            <p>Price: ${property.price}</p>
-            <p>Number of Rooms: {property.number_of_rooms}</p>
-            <p>Description: {property.description}</p>
-            <p>Category: {property.category}</p>
+            <h2>{propertyDetails.location}</h2>
+            <p>Price: ${propertyDetails.price}</p>
+            <p>Number of Rooms: {propertyDetails.number_of_rooms}</p>
+            <p>Description: {propertyDetails.description}</p>
+            <p>Category: {propertyDetails.category}</p>
             {showOwnerDetails && ownerDetails && (
               <div>
                 <p>Owner: {ownerDetails.first_name}</p>
