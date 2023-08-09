@@ -346,15 +346,21 @@ class Properties(Resource):
     @api.doc(description='Create a new property', body=property_model)
     @jwt_required()
     @user_type_required(['owner', 'admin'])
+    @api.doc(description='Create a new property', body=property_model)
     def post(self):
+        auth_valid, auth_error = verify_token()
+
+        if not auth_valid:
+            return make_response(jsonify(auth_error), 401)
+
         data = request.get_json()
-        
+
         image_urls = []
         if 'image_urls' in data and isinstance(data['image_urls'], list):
             for image_url in data['image_urls']:
                 uploaded_image = cloudinary.uploader.upload(image_url)
                 image_urls.append(uploaded_image['secure_url'])
-        
+
         new_property = Property(
             owner_id=data['owner_id'],
             number_of_rooms=data['number_of_rooms'],
@@ -567,8 +573,15 @@ class MoveAssistances(Resource):
     @api.doc(description='Create a new move assistance', body=move_assistance_model)
     def post(self):
         data = request.get_json()
+
+        image_url = ""
+        if 'image' in data:
+            uploaded_image = cloudinary.uploader.upload(data['image'])
+            image_url = uploaded_image['secure_url']
+
         new_move = MoveAssistance(
             service_details=data['service_details'],
+            image=image_url,
             status=data['status'],
             tenant_id=data['tenant_id']
         )
@@ -579,7 +592,6 @@ class MoveAssistances(Resource):
         response = make_response(jsonify(response_dict), 201)
 
         return response
-
 @api.route('/move_assistances/<int:id>')
 class MoveAssistance_by_Id(Resource):
     @api.doc(description='Get a specific move assistance by ID')

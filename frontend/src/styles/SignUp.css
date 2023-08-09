@@ -15,7 +15,7 @@
   
   .right-half {
     flex: 1;
-    background-image: url('../images/bb.jpg');
+    background-image: url('/home/skylar/Documents/Web_App/SakaKeja/frontend/src/images/UI (12).jpg');
     background-size: cover;
     background-position: center;
   }
@@ -58,11 +58,11 @@
   }
   
   .signup-google-button {
-    background-image: url('../images/cc.jpg');
+    background-image: url('../images/Google.png');
   }
   
   .signup-apple-button {
-    background-image: url('../images/dd.jpg');
+    background-image: url('../images/Apple2.jpg');
   }
   
   .signup-google-button,
