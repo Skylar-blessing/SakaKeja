@@ -8,7 +8,7 @@ import Payments from './Payments';
 function TenantDashboard() {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
-  const [showPropertyList, setShowPropertyList] = useState(false);
+  const [showPropertyList, setShowPropertyList] = useState(true); // Initialize to true
   const [showMovers, setShowMovers] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showPayments, setShowPayments] = useState(false);
@@ -38,34 +38,6 @@ function TenantDashboard() {
     fetchUserData();
   }, []);
 
-  const handleRentClick = () => {
-    setShowPropertyList(true);
-    setShowMovers(false);
-    setShowSettings(false);
-    setShowPayments(false);
-  };
-
-  const handleMoversClick = () => {
-    setShowMovers(true);
-    setShowPropertyList(false);
-    setShowSettings(false);
-    setShowPayments(false);
-  };
-
-  const handleSettingsClick = () => {
-    setShowSettings(true);
-    setShowPropertyList(false);
-    setShowMovers(false);
-    setShowPayments(false);
-  };
-
-  const handlePaymentsClick = () => {
-    setShowPayments(true);
-    setShowPropertyList(false);
-    setShowMovers(false);
-    setShowSettings(false);
-  };
-
   const handleLogout = () => {
     localStorage.removeItem('user_id');
     navigate('/login');
@@ -76,16 +48,16 @@ function TenantDashboard() {
       <div style={{ width: '20%', height: '100vh', backgroundColor: '#dcdcdc', padding: '20px' }}>
         <ul style={{ listStyleType: 'none', padding: 0 }}>
           <li style={{ marginBottom: '10px' }}>
-            <div onClick={handleRentClick} style={{ cursor: 'pointer' }}>Rent</div>
+            <div onClick={() => setShowPropertyList(true)} style={{ cursor: 'pointer' }}>Rent</div>
           </li>
           <li style={{ marginBottom: '10px' }}>
-            <div onClick={handleMoversClick} style={{ cursor: 'pointer' }}>Movers</div>
+            <div onClick={() => setShowMovers(true)} style={{ cursor: 'pointer' }}>Movers</div>
           </li>
           <li style={{ marginBottom: '10px' }}>
-            <div onClick={handlePaymentsClick} style={{ cursor: 'pointer' }}>Payments</div>
+            <div onClick={() => setShowPayments(true)} style={{ cursor: 'pointer' }}>Payments</div>
           </li>
           <li style={{ marginBottom: '10px' }}>
-            <div onClick={handleSettingsClick} style={{ cursor: 'pointer' }}>Settings</div>
+            <div onClick={() => setShowSettings(true)} style={{ cursor: 'pointer' }}>Settings</div>
           </li>
           <li style={{ marginBottom: '10px' }}>
             <button onClick={handleLogout} style={{ background: '#3A5B22', color: 'white', border: 'none', cursor: 'pointer', padding: '5px 10px' }}>Logout</button>
