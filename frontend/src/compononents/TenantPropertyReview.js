@@ -1,6 +1,6 @@
 import React from 'react';
 
-function PropertyReview() {
+function TenantPropertyReview() {
     return(
         <div>
             <h1>Image(swipe), details, Review(fetch by Id)(post), button pay, book(contact details owner) </h1>
@@ -8,4 +8,4 @@ function PropertyReview() {
     )
 }
 
-export default PropertyReview;
+export default TenantPropertyReview;

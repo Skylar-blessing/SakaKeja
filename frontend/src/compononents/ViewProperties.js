@@ -3,7 +3,7 @@ import React from 'react';
 function ViewProperties() {
     return(
         <div>
-            <h1>View Properties</h1>
+            <h1>View Properties (Edit Property)</h1>
         </div>
     )
 }
