@@ -82,7 +82,6 @@ class Property(db.Model, SerializerMixin):
     location = db.Column(db.String)
     price = db.Column(db.Integer)
     description = db.Column(db.String)
-    rating = db.Column(db.Float)
     image_urls = db.Column(db.ARRAY(db.String))
 
     payments_received = db.relationship("Payment", backref="property", lazy="select")
@@ -97,7 +96,6 @@ class Property(db.Model, SerializerMixin):
             'location': self.location,
             'price': self.price,
             'description': self.description,
-            'rating': self.rating,
             'image_urls': self.image_urls,
         }
 

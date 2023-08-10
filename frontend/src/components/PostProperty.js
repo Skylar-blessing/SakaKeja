@@ -10,8 +10,7 @@ function PostProperty() {
   const [location, setLocation] = useState('');
   const [category, setCategory] = useState('');
   const [imageFiles, setImageFiles] = useState([]);
-  const [rating, setRating] = useState('');
-
+  
   const handleImageUpload = (event) => {
     const files = event.target.files;
     setImageFiles(files);
@@ -29,7 +28,6 @@ const propertyData = {
     number_of_rooms: bedrooms, // Make sure this matches the input field name
     description: description,
     price: price,
-    rating: rating,
     location: location,
     categories: category,
     image_urls: imageFiles
@@ -89,14 +87,6 @@ const propertyData = {
             onChange={(e) => setDescription(e.target.value)}
           />
           
-        </div>
-        <div className="property-input">
-        <label>Rating:</label>
-          <textarea
-          type="number"
-            value={rating}
-            onChange={(e) => setRating(e.target.value)}
-          />
         </div>
         <div className="property-input">
           <label>Price:</label>

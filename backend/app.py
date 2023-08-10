@@ -376,7 +376,6 @@ class Properties(Resource):
             location=data['location'],
             price=data['price'],
             description=data['description'],
-            rating=data['rating'],
             image_urls=image_urls
         )
         db.session.add(new_property)
