@@ -16,7 +16,6 @@ from flask_mail import Mail, Message
 from secrets import token_urlsafe
 from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
 from paypalcheckoutsdk.orders import OrdersCreateRequest
-import secrets
 
 client_id = os.environ.get('PAYPAL_CLIENT_ID')
 client_secret = os.environ.get('PAYPAL_CLIENT_SECRET')
@@ -41,8 +40,6 @@ jwt_manager = JWTManager(app)
 mail = Mail(app)
 
 from models import User, Payment, Property, MoveAssistance, Review
-
-app.config['JWT_SECRET_KEY'] = secrets.token_urlsafe(32)
 
 def send_verification_email(user_email, token):
     verification_link = url_for('email_verify_email', token=token, _external=True)
