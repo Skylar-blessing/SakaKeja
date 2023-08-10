@@ -3,7 +3,7 @@ import Header from './Header';
 import Welcome from './Welcome';
 import OurCompany from './OurCompany';
 import PropertyExplore from './PropertyExplore';
-import Blog from './Blog';
+import Blog from './BlogPost';
 import ContactUs from './ContactUs';
 import Footer from './Footer';
 
