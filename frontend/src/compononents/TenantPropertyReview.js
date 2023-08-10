@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import jwt_decode from 'jwt-decode';
+import '../styles/TenantPropertyReview.css';
 
 function TenantPropertyReview() {
     const location = useLocation();
@@ -117,9 +118,9 @@ function TenantPropertyReview() {
     }
   };
   return (
-    <div>
+    <div className="property-review-container">
       {property ? (
-        <div>
+        <div className="property-details">
           <div className="carousel-container">
             <Carousel
               showThumbs={false}
@@ -135,7 +136,7 @@ function TenantPropertyReview() {
               ))}
             </Carousel>
           </div>
-          <div>
+          <div className="details-info">
             <h2>{property.location}</h2>
             <p>Price: ${property.price}</p>
             <p>Number of Rooms: {property.number_of_rooms}</p>
@@ -147,51 +148,51 @@ function TenantPropertyReview() {
                 <p>Phone Number: {ownerDetails.phone_number}</p>
               </div>
             )}
-            <button onClick={() => navigate('/payments')} style={{ background: '#3A5B22', color: 'white', border: 'none', cursor: 'pointer', padding: '5px 10px' }}>Pay</button>
-            <button onClick={handleBookClick} style={{ background: '#3A5B22', color: 'white', border: 'none', cursor: 'pointer', padding: '5px 10px' }}>Book</button>
-            <div>
-              <h3>Reviews</h3>
-              {reviews.length > 0 ? (
-                <ul>
-                  {reviews.map((review) => (
-                    <li key={review.id}>
-                      <p>Review by: {review.tenant.first_name}</p>
-                      <p>Rating: {review.rating} stars</p>
-                      <p>{review.review_text}</p>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No reviews available.</p>
-              )}
-            </div>
-          </div>
-          <div>
-            <h3>Write a Review</h3>
-            <textarea
-              placeholder="Enter your review..."
-              value={newReviewText}
-              onChange={(e) => setNewReviewText(e.target.value)}
-            />
-            <div>
-              <label>Rating:</label>
-              <select
-                value={newReviewRating}
-                onChange={(e) => setNewReviewRating(e.target.value)}
-              >
-                <option value={1}>1 star</option>
-                <option value={2}>2 stars</option>
-                <option value={3}>3 stars</option>
-                <option value={4}>4 stars</option>
-                <option value={5}>5 stars</option>
-              </select>
-            </div>
-            <button onClick={handleReviewSubmit}>Submit Review</button>
+            <button onClick={() => navigate('/payments')} style={{ background: '#3A5B22', color: 'white', border: 'none', cursor: 'pointer', padding: '5px 10px', borderRadius: '8px' }}>Pay</button>
+            <button onClick={handleBookClick} style={{ background: '#3A5B22', color: 'white', border: 'none', cursor: 'pointer', padding: '5px 10px', borderRadius: '8px' }}>Book</button>
           </div>
         </div>
       ) : (
         <p>Loading property details...</p>
       )}
+      <div className="reviews-section">
+        <h3>Reviews</h3>
+        {reviews.length > 0 ? (
+          <ul>
+            {reviews.map((review) => (
+              <li key={review.id}>
+                <p>Review by: {review.tenant.first_name}</p>
+                <p>Rating: {review.rating} stars</p>
+                <p>{review.review_text}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No reviews available.</p>
+        )}
+      </div>
+      <div className="review-form">
+        <h3>Write a Review</h3>
+        <textarea
+          placeholder="Enter your review..."
+          value={newReviewText}
+          onChange={(e) => setNewReviewText(e.target.value)}
+        />
+        <div>
+          <label>Rating:</label>
+          <select
+            value={newReviewRating}
+            onChange={(e) => setNewReviewRating(e.target.value)}
+          >
+            <option value={1}>1 star</option>
+            <option value={2}>2 stars</option>
+            <option value={3}>3 stars</option>
+            <option value={4}>4 stars</option>
+            <option value={5}>5 stars</option>
+          </select>
+        </div>
+        <button onClick={handleReviewSubmit}>Submit Review</button>
+      </div>
     </div>
   );
 }
