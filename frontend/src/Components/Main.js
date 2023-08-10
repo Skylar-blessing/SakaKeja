@@ -4,6 +4,7 @@ import Welcome from './Welcome';
 import OurCompany from './OurCompany';
 import PropertyExplore from './PropertyExplore';
 import BlogPosts from './BlogPosts';
+import Footer from './Footer';
 
 
 
@@ -22,6 +23,9 @@ const Main = () => {
       </div>
       <div className='Blog'>
       <BlogPosts />
+      </div>
+      <div>
+        <Footer />
       </div>
     </div>
   );

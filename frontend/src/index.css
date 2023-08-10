@@ -39,6 +39,11 @@ header {
   color: #fff;
 }
 
+.home-icon {
+  padding-right: 10px;
+  font-size: 40px;
+}
+
 .navbar {
   display: flex;
 }
@@ -180,14 +185,6 @@ header {
   border-radius: 50%;
 }
 /* Now, when you use the SearchComponent in your React app, the search container will have rounded corners, the search input will have a white background, the search icon will have a green background, and the filter icon will also be green and part of the search input. The dropdown menu will have a light-grey background. */
-
-
-
-
-
-
-
-
 
 
   /* styles.css */
@@ -344,7 +341,7 @@ p {
 /* PropertyExplore.css */
 
 .property-explore {
-  background-color: rgb(246, 248, 246);
+  /* background-image: '/home/mike/SakaKeja/frontend/src/images/Porp.jpg'; */
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -404,48 +401,97 @@ p {
 }
 
 
-.Blog {
+
+
+/* BlogPosts.css */
+
+/* BlogPosts.css */
+
+.blog-container {
+  padding: 50px;
+  width: 100%;
   min-height: 100vh;
+}
+
+.blog-post {
+  display: flex;
+  /* margin-bottom: 40px; */
   width: 100%;
-  background-color: #25460e;
-  color: #fff;
+  min-height: 100%;
+
+}
+
+.blog-post-image {
+  flex: 1;
+  max-width: 50%;
+}
+
+.blog-post-image img {
+  width: 100%;
+  height: auto;
+}
+
+.blog-post-content {
+  flex: 1;
   padding: 20px;
-  line-height: 1.9rem;
-  font-size: 20px;
+  background-color: green;
+  color: white;
 }
 
-/* .container {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  min-height: 70vh;
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-  min-height: 50%;
-}
-
-h1 {
+.blog-post-title {
   font-size: 24px;
-  margin-bottom: 10px;
+  margin-top: 0;
 }
 
-.image {
-  display: flex;
-  padding-bottom: 50%;
-  background-size: cover;
-  background-position: center;
+.blog-post-date {
+  font-size: 14px;
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.7);
 }
 
-p {
+.blog-post-text {
+  margin-top: 20px;
   font-size: 16px;
   line-height: 1.5;
-  margin-bottom: 20px;
-} */
+}
 
+.blog-read-more {
+  display: inline-block;
+  margin-top: 20px;
+  background-color: white;
+  color: green;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.blog-read-more:hover {
+  background-color: green;
+  color: white;
+}
+
+/* Apply custom styling for the second blog post */
+.blog-post:nth-child(2) .blog-post-image {
+  order: -1;
+}
+
+.blog-post:nth-child(2) .blog-post-content {
+  background-color: green;
+  color: white;
+}
+
+/* Media Queries for Responsiveness */
+@media screen and (max-width: 768px) {
+  .blog-post {
+    flex-direction: column;
+  }
+
+  .blog-post-image,
+  .blog-post-content {
+    max-width: 100%;
+  }
+}
 
 
 /* LOGIN CSS */
@@ -501,14 +547,6 @@ padding: 20px;
 }
 
 
-
-.signin-google-button {
-  /* background-image: url('../images/Google.png'); */
-}
-
-.signin-apple-button {
-  /* background-image: url('../images/Apple2.jpg'); */
-}
 
 .signin-google-button,
 .signin-apple-button {
@@ -605,13 +643,6 @@ form button {
   justify-content: center;
 }
 
-.signup-google-button {
-  /* background-image: url('../images/Google.png'); */
-}
-
-.signup-apple-button {
-  /* background-image: url('../images/Apple2.jpg'); */
-}
 
 .signup-google-button,
 .signup-apple-button {
@@ -637,137 +668,72 @@ select {
   margin-bottom: 10px;
 }
 
-/* PROPERTIES after login
-.properties-container {
+
+
+/* Footer */
+.footer-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-image: url('./images/bb.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-  background-clip: url;
+  justify-content: space-between;
+  background-color: rgb(14, 53, 14);
+  padding: 20px;
+  color: white;
+  min-height: 50vh;
   padding: 20px;
 }
 
-.search-input {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 550px;
-  margin-bottom: 20px;
-}
-
-.search-input input {
-  width: 100%;
-  padding: 8px;
-  border: none;
-  border-radius: 30px;
-  font-size: 18px;
-  background-color: rgba(255, 255, 255, 0.8);
-}
-
-.menu {
-  display: flex;
-  justify-content: space-between;
-  width: 550px;
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 10px;
-}
-
-.left-menu {
-  display: flex;
-  align-items: center;
-  font-size: 18px;
-}
-
-.left-menu ul {
-  list-style: none;
-  display: flex;
-  margin: 0;
-  padding: 0;
-}
-
-.left-menu li {
+.footer-section {
+  flex: 1;
+  line-height: 1.9rem;
   margin-right: 20px;
 }
 
-.mid-left-filter {
+.social-icons {
   display: flex;
   flex-direction: column;
+}
+
+.eco-icon {
+  display: flex;
   align-items: center;
-  font-size: 18px;
-}
-
-.mid-left-filter label {
-  margin-bottom: 5px;
-}
-
-.mid-left-filter input,
-.mid-left-filter select {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  font-weight: bold;
+  font-size: 20px;
+  padding-top: 20px;
   margin-bottom: 10px;
 }
 
-.results {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+.social-links {
+  display: flex;
   gap: 20px;
-  justify-items: center;
-  padding: 20px;
+  size: 20px;
 }
 
-.property-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 10px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out;
-}
-
-.property-card:hover {
-  transform: scale(1.05);
-}
-
-.property-card img {
-  width: 100%;
-  max-height: 200px;
-  object-fit: cover;
-  border-radius: 10px;
-}
-
-.property-card h3,
-.property-card p {
-  margin: 5px 0;
-  text-align: center;
-}
-
-.property-card img {
-  content: url('./images/ff.jpg'); 
-}
-
-.logout-button {
-  width: 550px;
-  display: flex;
-  justify-content: center;
-}
-
-.logout-button button {
-  padding: 10px 20px;
-  background-color: #ff0000;
-  color: #fff;
+.contact-button button {
+  background-color: white;
+  color: green;
   border: none;
+  padding: 5px 10px;
   border-radius: 5px;
-  font-size: 18px;
   cursor: pointer;
-}  */
+}
+
+.footer-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.footer-list li {
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.footer-list li svg {
+  margin-right: 5px;
+}
+
+.Nav {
+  font-size: 20px;
+  font-weight: bold;
+  padding-bottom: 10px;
+}
+
+

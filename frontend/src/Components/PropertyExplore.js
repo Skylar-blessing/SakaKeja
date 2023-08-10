@@ -4,7 +4,6 @@ const PropertyExplore = () => {
   const [properties, setProperties] = useState([]);
 
   useEffect(() => {
-    // Fetch properties from the backend API
     fetch('http://127.0.0.1:5000/properties') 
       .then(response => response.json())
       .then(data => {
