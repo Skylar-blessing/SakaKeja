@@ -1,0 +1,150 @@
+
+/* TenantPropertyReview.css */
+
+.property-details-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .carousel-container {
+    width: 80%;
+    margin-bottom: 20px;
+  }
+  
+  .property-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  
+  .property-location {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .property-price {
+    font-size: 18px;
+  }
+  
+  .property-rooms,
+  .property-description,
+  .property-category {
+    font-size: 16px;
+  }
+  
+  .owner-details {
+    margin-top: 10px;
+  }
+  
+  .owner-name,
+  .owner-phone {
+    font-size: 14px;
+  }
+  
+  .pay-button,
+  .book-button {
+    background-color: #3A5B22;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin-top: 10px;
+  }
+  
+  .review-section {
+    margin-top: 20px;
+  }
+  
+  .review-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .review-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .review-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .review-author {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .star-rating {
+    display: flex;
+    align-items: center;
+  }
+  
+  .star {
+    font-size: 16px;
+    color: gold;
+  }
+  
+  .rating {
+    font-size: 14px;
+    margin-left: 5px;
+  }
+  
+  .review-text {
+    font-size: 16px;
+  }
+  
+  .no-reviews {
+    font-size: 14px;
+    color: #999;
+  }
+  
+  .write-review-section {
+    margin-top: 20px;
+  }
+  
+  .write-review-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .review-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    resize: vertical;
+  }
+  
+  .rating-input {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .rating-label {
+    font-size: 16px;
+    margin-right: 10px;
+  }
+  
+  .rating-select {
+    font-size: 16px;
+    padding: 5px;
+  }
+  
+  .submit-review-button {
+    background-color: #3A5B22;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+  }
+  

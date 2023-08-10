@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import jwt_decode from 'jwt-decode';
 
 function TenantPropertyReview() {
     const location = useLocation();
@@ -80,6 +81,10 @@ function TenantPropertyReview() {
 
   const handleReviewSubmit = async () => {
     const token = localStorage.getItem('access_token');
+    console.log(token)
+    const decodedToken = jwt_decode(token);
+    const userId = decodedToken.sub.user_id;
+    console.log('User ID:', userId);
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
@@ -88,7 +93,7 @@ function TenantPropertyReview() {
     const newReviewData = {
       review_text: newReviewText,
       rating: newReviewRating,
-      tenant_id: ownerDetails.id, // Assuming you have ownerDetails fetched
+      tenant_id: userId,
       property_id: property.id,
     };
 
