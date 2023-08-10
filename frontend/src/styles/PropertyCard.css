@@ -3,10 +3,11 @@
     flex-direction: column;
     border: 1px solid #ccc;
     border-radius: 10px;
-    padding: 10px;
+    padding: 5px;
     margin: 10px;
     max-width: 200px;
     transition: transform 0.3s ease-in-out;
+    height: 60vh;
   }
   
   .property-card:hover {

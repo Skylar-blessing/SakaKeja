@@ -4,6 +4,7 @@ import PostProperty from './PostProperty';
 import ViewProperties from './ViewProperties';
 import ViewPaymentBalance from './ViewPayments';
 import Settings from './Settings';
+import "../styles/OwnerDashboard.css";
 
 function OwnerDashboard() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function OwnerDashboard() {
 
   return (
     <div style={{ display: 'flex' }}>
-      <div style={{ width: '20%', height: '100vh', backgroundColor: '#dcdcdc', padding: '20px' }}>
+      <div className='Menu' style={{ width: '20%', height: '100vh', backgroundColor: '#dcdcdc', padding: '20px' }}>
         <ul style={{ listStyleType: 'none', padding: 0 }}>
           <li style={{ marginBottom: '10px' }}>
             <div onClick={() => handleTabClick('post-property')} style={{ cursor: 'pointer' }}>Post Property</div>

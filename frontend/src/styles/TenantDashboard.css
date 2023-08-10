@@ -1,0 +1,30 @@
+/* TenantDashboard.css */
+
+.Menu ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .Menu li {
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .Menu li:hover {
+    background-color: #3A5B22;
+    color: white;
+  }
+  
+  .Menu button {
+    background: #3A5B22;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+  }
+  
+  .Menu button:hover {
+    background-color: #3A5B22;
+  }
+  

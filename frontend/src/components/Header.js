@@ -1,23 +1,25 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Link as ScrollLink } from 'react-scroll';
+import { FaHome } from 'react-icons/fa'; // Import the FaHome icon
 
 const Header = () => {
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
-    navigate('/login');
+    navigate('/login')
   };
 
   const handleSignupClick = () => {
-    navigate('/signup');
+    navigate('/signup')
   };
 
   return (
     <header>
       <div className="header-container">
         <div className="logo-container">
-          <span className="logo-name">SakaKeja</span>
+          <span className="home-icon"><FaHome /></span> {/* Add the home icon */}
+          <span className="logo-name">Saka-Keja</span>
         </div>
         <nav className="navbar">
           <ul>
@@ -40,7 +42,7 @@ const Header = () => {
                 offset={-70}
                 duration={500}
               >
-                About Us
+                About us
               </ScrollLink>
             </li>
             <li>

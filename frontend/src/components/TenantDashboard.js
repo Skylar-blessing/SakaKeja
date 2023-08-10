@@ -4,6 +4,7 @@ import PropertyList from './PropertyList';
 import Movers from './Movers';
 import Settings from './Settings';
 import Payments from './Payments';
+import "../styles/TenantDashboard.css"
 
 function TenantDashboard() {
   const navigate = useNavigate();
@@ -73,7 +74,7 @@ function TenantDashboard() {
 
   return (
     <div style={{ display: 'flex' }}>
-      <div style={{ width: '20%', height: '100vh', backgroundColor: '#dcdcdc', padding: '20px' }}>
+      <div className='Menu' style={{ width: '20%', height: '100vh', backgroundColor: '#dcdcdc', padding: '20px' }}>
         <ul style={{ listStyleType: 'none', padding: 0 }}>
           <li style={{ marginBottom: '10px' }}>
             <div onClick={handleRentClick} style={{ cursor: 'pointer' }}>Rent</div>
