@@ -14,7 +14,7 @@ function TenantPropertyReview() {
     const [ownerDetails, setOwnerDetails] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [newReviewText, setNewReviewText] = useState('');
-    const [newReviewRating, setNewReviewRating] = useState(1);
+    const [newReviewRating, setNewReviewRating] = useState(3);
 
   useEffect(() => {
     if (propertyId) {
@@ -138,7 +138,7 @@ function TenantPropertyReview() {
           </div>
           <div className="details-info">
             <h2>{property.location}</h2>
-            <p>Price: ${property.price}</p>
+            <p>Price: Ksh{property.price}</p>
             <p>Number of Rooms: {property.number_of_rooms}</p>
             <p>Description: {property.description}</p>
             <p>Category: {property.category}</p>

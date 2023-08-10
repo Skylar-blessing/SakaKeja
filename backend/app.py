@@ -386,19 +386,6 @@ class Properties(Resource):
         response = make_response(jsonify(response_dict), 201)
 
         return response
-    @api.doc(description='Delete all properties')
-    def delete(self):
-        try:
-            Property.query.delete()
-            db.session.commit()
-
-            response_dict = {"message": "All properties deleted successfully"}
-            response = make_response(jsonify(response_dict), 200)
-            return response
-        except Exception as e:
-            db.session.rollback()
-            return make_response(jsonify({"error": str(e)}), 500)
-
 
 @api.route('/properties/<int:id>')
 class Property_by_Id(Resource):

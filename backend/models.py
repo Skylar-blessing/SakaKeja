@@ -78,7 +78,7 @@ class Property(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     number_of_rooms = db.Column(db.Integer)
-    categories = db.Column(db.String)
+    categories = db.Column(db.ARRAY(db.String))
     location = db.Column(db.String)
     price = db.Column(db.Integer)
     description = db.Column(db.String)

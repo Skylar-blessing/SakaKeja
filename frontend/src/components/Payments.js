@@ -23,7 +23,7 @@ function Payments() {
       amount: parseFloat(amount),
       status: 'paid',
       tenant_id: 2,
-      property_id: 1,
+      property_id: 3,
       payment_date: paymentDate,
     };
 
