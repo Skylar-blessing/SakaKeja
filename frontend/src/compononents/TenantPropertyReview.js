@@ -121,15 +121,15 @@ function TenantPropertyReview() {
     <div className="property-review-container">
       {property ? (
         <div className="property-details">
-          <div className="carousel-container">
+          <div className="carousel-container-1">
             <Carousel
               showThumbs={false}
               showStatus={false}
               infiniteLoop={true}
             >
               {property.image_urls.reverse().map((imageUrl, index) => (
-                <div key={index} className="slide-container">
-                  <div className="image-holder">
+                <div key={index} className="slide-container-1">
+                  <div className="image-holder-1">
                     <img src={imageUrl} alt={`Property ${index + 1}`} className="slide-image" />
                   </div>
                 </div>

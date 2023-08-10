@@ -16,24 +16,24 @@
   margin-top: 20px;
 }
 
-.carousel-container {
+.carousel-container-1 {
   max-width: 600px;
   margin-right: 20px;
 }
 
-.slide-container {
+.slide-container-1 {
   border-radius: 8px;
   overflow: hidden;
 }
 
-.image-holder img {
+.image-holder-1 img {
   width: 200%;
   height: auto;
   object-fit: contain;
   border-radius: 8px;
   max-width: none;
 }
-.image-holder {
+.image-holder-1 {
   width: 200%;
   height: 400px;
 }
