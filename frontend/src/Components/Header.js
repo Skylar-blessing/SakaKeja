@@ -1,7 +1,18 @@
 import React from 'react';
-import { Link } from 'react-scroll';
+import { Link, useNavigate } from 'react-router-dom';
+import { Link as ScrollLink } from 'react-scroll';
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const handleLoginClick = () => {
+    navigate('/login')
+  };
+
+  const handleSignupClick = () => {
+    navigate('/signup')
+  };
+
   return (
     <header>
       <div className="header-container">
@@ -11,8 +22,7 @@ const Header = () => {
         <nav className="navbar">
           <ul>
             <li>
-              <Link
-                activeClass="active"
+              <ScrollLink
                 to="home"
                 spy={true}
                 smooth={true}
@@ -20,11 +30,10 @@ const Header = () => {
                 duration={500}
               >
                 Home
-              </Link>
+              </ScrollLink>
             </li>
             <li>
-              <Link
-                activeClass="active"
+              <ScrollLink
                 to="about-us"
                 spy={true}
                 smooth={true}
@@ -32,23 +41,21 @@ const Header = () => {
                 duration={500}
               >
                 Our Company
-              </Link>
+              </ScrollLink>
             </li>
             <li>
-              <Link
-                activeClass="active"
-                to="properties"
+              <ScrollLink
+                to="property-explore"
                 spy={true}
                 smooth={true}
                 offset={-70}
                 duration={1000}
               >
                 Properties
-              </Link>
+              </ScrollLink>
             </li>
             <li>
-              <Link
-                activeClass="active"
+              <ScrollLink
                 to="blog"
                 spy={true}
                 smooth={true}
@@ -56,11 +63,10 @@ const Header = () => {
                 duration={500}
               >
                 Blog
-              </Link>
+              </ScrollLink>
             </li>
             <li>
-              <Link
-                activeClass="active"
+              <ScrollLink
                 to="contact-us"
                 spy={true}
                 smooth={true}
@@ -68,13 +74,13 @@ const Header = () => {
                 duration={500}
               >
                 Contact Us
-              </Link>
+              </ScrollLink>
             </li>
           </ul>
         </nav>
         <div className="auth-buttons">
-          <Link to="/login" className="auth">Login</Link>
-          <Link to="/signup" className="auth-button">Sign Up</Link>
+          <button className="auth-button" onClick={handleLoginClick}>Login</button>
+          <button className="auth-button" onClick={handleSignupClick}>Sign Up</button>
         </div>
       </div>
     </header>

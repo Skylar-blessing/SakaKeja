@@ -1,80 +1,85 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+// import '../styles/SignUp.css';
 
-const SignupPage = () => {
-  const [userType, setUserType] = useState('owners');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
+const SignUp = () => {
+  const [formData, setFormData] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone_number: '',
+    password: '',
+    user_type: '',
+  });
 
-  const handleSignup = () => {
-    console.log('User Type:', userType);
-    console.log('Name:', name);
-    console.log('Email:', email);
-    console.log('Password:', password);
-    console.log('Agreed to Terms:', agreedToTerms);
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
+  const navigate = useNavigate(); 
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (formData.user_type !== 'tenant' && formData.user_type !== 'owner') {
+      alert('Invalid user_type. Please select "tenant" or "owner".');
+      return;
+    }
+
+    fetch('http://127.0.0.1:5000/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        console.log('User created successfully!');
+
+        alert('User created successfully!');
+
+        navigate('/login');
+      })
+      .catch((error) => {
+        console.error('Error creating user:', error);
+      });
   };
 
   return (
     <div className="signup-container">
-      <h2>Get Started Now!</h2>
-      <div className="user-type-dropdown">
-        <label>Select User Type:</label>
-        <select value={userType} onChange={(e) => setUserType(e.target.value)}>
-          <option value="owners">Owners</option>
-          <option value="tenants">Tenants</option>
-          <option value="admin">Admin</option>
-        </select>
+      <div className="left-half">
+        <h2>Get Started Now</h2>
+        <form onSubmit={handleSubmit}>
+          <input type="text" name="first_name" placeholder="First Name" value={formData.first_name} onChange={handleChange} required />
+          <input type="text" name="last_name" placeholder="Last Name" value={formData.last_name} onChange={handleChange} required />
+          <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
+          <input type="text" name="phone_number" placeholder="Phone Number" value={formData.phone_number} onChange={handleChange} required />
+          <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
+          <select name="user_type" value={formData.user_type} onChange={handleChange} required>
+            <option value="">Select User Type</option>
+            <option value="tenant">Tenant</option>
+            <option value="owner">Owner</option>
+          </select>
+          <button className="signup-button" type="submit">
+            Sign Up
+          </button>
+          <div className="sign-up-options">
+            <p>Or sign up with:</p>
+            <div className="signup-buttons-wrapper">
+                <button className="signup-google-button">Sign up with Google</button>
+                <button className="signup-apple-button">Sign up with Apple</button>
+            </div>
+          </div>
+        </form>
       </div>
-      <div className="signup-form">
-        <div className="name-container">
-          <label>Name:</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div className="email-container">
-          <label>Email address:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="password-container">
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div className="terms-container">
-          <input
-            type="checkbox"
-            checked={agreedToTerms}
-            onChange={() => setAgreedToTerms(!agreedToTerms)}
-          />
-          <label>I agree to the terms and policy</label>
-        </div>
-        <button className="signup-button" onClick={handleSignup}>
-          Signup
-        </button>
-        <div className="signup-options">
-          <p>Or signup with:</p>
-          <button className="google-signup">Signup with Google</button>
-          <button className="apple-signup">Signup with Apple</button>
-        </div>
+      <div className="right-half">
       </div>
-      <div className="signin-option">
-        <p>Have an account? <a href="/login">Sign In</a></p>
-      </div>
-      <div className="google-logo">Logo</div>
-      <div className="apple-logo">Logo</div>
     </div>
   );
 };
 
-export default SignupPage;
+export default SignUp;

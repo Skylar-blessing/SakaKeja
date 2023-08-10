@@ -1,17 +1,30 @@
 import React from 'react';
 import Header from './Header';
 import Welcome from './Welcome';
-import Search from './Search';
+import OurCompany from './OurCompany';
+import PropertyExplore from './PropertyExplore';
+import BlogPosts from './BlogPosts';
 
-const App = () => {
-  return (
-    <div className="app-container">
+
+
+const Main = () => {
+  return(
+    <div>
+      <div className="app-container">
       <Header />
       <Welcome />
-      <Search />
-      {/* Other sections/components */}
+      </div>
+      <div className='AboutU'>
+        <OurCompany />
+      </div>
+      <div className='PropEx'>
+      <PropertyExplore />
+      </div>
+      <div className='Blog'>
+      <BlogPosts />
+      </div>
     </div>
   );
 };
 
-export default App;
+export default Main;
