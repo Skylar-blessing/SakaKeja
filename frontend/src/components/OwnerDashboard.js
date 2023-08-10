@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PostProperty from './PostProperty';
 import ViewProperties from './ViewProperties';
-import ViewPaymentBalance from './ViewPaymentBalance';
+import ViewPaymentBalance from './ViewPayments';
 import Settings from './Settings';
 
 function OwnerDashboard() {

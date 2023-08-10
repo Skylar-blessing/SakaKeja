@@ -827,3 +827,81 @@ button {
   background-color: #555;
 }
 
+/* VIEW-PAYMENT CSS */
+.view-payments-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  background-image: url('./images/ll.jpg');
+}
+
+.view-payments-container h2 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.view-payments-container p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.withdraw-section,
+.transfer-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.withdraw-section h3,
+.transfer-section h3 {
+  color: #333;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.withdraw-section input,
+.transfer-section input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.withdraw-section button,
+.transfer-section button {
+  background-color: #3A5B22;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.withdraw-section button:hover,
+.transfer-section button:hover {
+  background-color: #2E4720;
+}
+
+.error-message,
+.success-message {
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.error-message {
+  color: #E74C3C;
+}
+
+.success-message {
+  color: #27AE60;
+}

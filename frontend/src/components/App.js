@@ -8,7 +8,7 @@ import TenantDashboard from './TenantDashboard';
 import PropertyList from './PropertyList'
 import PostProperty from './PostProperty';
 import ViewProperties from './ViewProperties';
-import ViewPaymentBalance from './ViewPaymentBalance';
+import ViewPaymentBalance from './ViewPayments';
 
 const App = () => {
   return (
