@@ -211,7 +211,20 @@ class Login(Resource):
 
         print(f"Successful login")
         access_token, refresh_token = create_token(user.id, user.user_type)
-        return make_response(jsonify({user.user_type: access_token, "refresh_token": refresh_token}), 200)
+        return make_response(jsonify({
+            "user_id": user.id,
+            user.user_type: access_token,
+            "refresh_token": refresh_token
+        }), 200)
+    
+@api.route('/protected')
+class ProtectedResource(Resource):
+    @jwt_required()
+    @api.doc(description='Protected resource that requires authentication')
+    def get(self):
+        current_user_id = get_jwt_identity()
+        user = User.query.get(current_user_id)
+        return make_response(jsonify({"user": user.to_dict()}), 200)
 
 
 class IndexResource(Resource):
@@ -220,7 +233,7 @@ class IndexResource(Resource):
 
 api.add_resource(IndexResource, '/')
 
-DEFAULT_PAGE_SIZE = 10
+DEFAULT_PAGE_SIZE = 12
 
 @api.route('/users')
 class Users(Resource):
@@ -254,6 +267,7 @@ class Users(Resource):
 
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
+            print("Email already exists")
             return make_response(jsonify({"error": "Email already exists"}), 400)
 
         new_user = User(
@@ -346,21 +360,15 @@ class Properties(Resource):
     @api.doc(description='Create a new property', body=property_model)
     @jwt_required()
     @user_type_required(['owner', 'admin'])
-    @api.doc(description='Create a new property', body=property_model)
     def post(self):
-        auth_valid, auth_error = verify_token()
-
-        if not auth_valid:
-            return make_response(jsonify(auth_error), 401)
-
         data = request.get_json()
-
+        
         image_urls = []
         if 'image_urls' in data and isinstance(data['image_urls'], list):
             for image_url in data['image_urls']:
                 uploaded_image = cloudinary.uploader.upload(image_url)
                 image_urls.append(uploaded_image['secure_url'])
-
+        
         new_property = Property(
             owner_id=data['owner_id'],
             number_of_rooms=data['number_of_rooms'],
@@ -592,6 +600,7 @@ class MoveAssistances(Resource):
         response = make_response(jsonify(response_dict), 201)
 
         return response
+
 @api.route('/move_assistances/<int:id>')
 class MoveAssistance_by_Id(Resource):
     @api.doc(description='Get a specific move assistance by ID')

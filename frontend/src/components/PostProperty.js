@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import jwt_decode from 'jwt-decode';
 
 function PostProperty() {
   const navigate = useNavigate();
@@ -18,14 +19,23 @@ function PostProperty() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const token = localStorage.getItem('access_token');
+const decodedToken = jwt_decode(token);
+const owner_id = decodedToken.sub.user_id; // Assuming user_id is the field for user ID
+
+const propertyData = {
+  owner_id: owner_id, // Set the owner_id with the user's ID
+  bedrooms: bedrooms,
+  description: description,
+  price: price,
+  location: location,
+  category: category,
+};
+
+    console.log(decodedToken);    
+
     const formData = new FormData();
-    formData.append('bedrooms', bedrooms);
-    formData.append('description', description);
-    formData.append('price', price);
-    formData.append('location', location);
-    if (category) {
-      formData.append('category', category);
-    }
+    formData.append('data', JSON.stringify(propertyData));
     for (const file of imageFiles) {
       formData.append('images', file);
     }
@@ -33,15 +43,18 @@ function PostProperty() {
     const accessToken = localStorage.getItem('access_token');
 
     try {
-      const response = await fetch('http://127.0.0.1:5000/properties', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: formData,
-      });
+        const response = await fetch('http://127.0.0.1:5000/properties', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(propertyData),
+});
 
+          
       const data = await response.json();
+      console.log(data);
 
       if (response.ok) {
         alert('Property posted successfully!');

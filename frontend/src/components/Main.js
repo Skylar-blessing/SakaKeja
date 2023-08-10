@@ -1,22 +1,32 @@
 import React from 'react';
-// import Header from './Header';
+import Header from './Header';
 import Welcome from './Welcome';
 import OurCompany from './OurCompany';
 import PropertyExplore from './PropertyExplore';
-import ContactUs from './ContactUs';
 import Blog from './Blog';
+import ContactUs from './ContactUs';
+
 
 
 const Main = () => {
   return(
-    <div className="app-container">
-      {/* <Header /> */}
+    <div>
+      <div className="app-container">
+      <Header />
       <Welcome />
-      <OurCompany />
+      </div>
+      <div className='AboutU'>
+        <OurCompany />
+      </div>
+      <div className='PropEx'>
       <PropertyExplore />
+      </div>
+      <div className='Blog'>
       <Blog />
+      </div>
+      <div className='Contact'>
       <ContactUs />
-
+      </div>
     </div>
   );
 };

@@ -40,7 +40,7 @@ const Header = () => {
                 offset={-70}
                 duration={500}
               >
-                Our Company
+                About Us
               </ScrollLink>
             </li>
             <li>

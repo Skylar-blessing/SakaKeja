@@ -9,6 +9,9 @@ import PropertyList from './PropertyList'
 import PostProperty from './PostProperty';
 import ViewProperties from './ViewProperties';
 import ViewPaymentBalance from './ViewPayments';
+import TenantPropertyReview from './TenantPropertyReview';
+import Payments from './Payments';
+
 
 const App = () => {
   return (
@@ -27,6 +30,8 @@ const App = () => {
         <Route path="/post-property" element={<PostProperty />} />
         <Route path="/view-properties" element={<ViewProperties />} />
         <Route path="/view-payment-balance" element={<ViewPaymentBalance />} />
+        <Route path="/tenant-property-review" element={<TenantPropertyReview />} />
+        <Route path="/payments" element={<Payments />} />
         </Routes>
 
         

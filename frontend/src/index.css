@@ -96,6 +96,7 @@ header {
 
 
 .app-container {
+  background-image: url('./images/aa.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -105,27 +106,23 @@ header {
 
 /* Welcome.css */
 .welcome {
-  background-image: url('./images/aa.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  padding-top: 100px;
+  margin-bottom: 500px;
 }
 
 .welcome h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-  text-align: center;
-  color: white; /* Adjust text color as needed */
+  font-size: 80px;
+  margin-bottom: 20px;
+  color: #fff;
 }
 
-
 .welcome p {
-  font-size: 30px;
+  font-size: 40px;
   text-align: center;
   /* background-color: #9d6d3d; */
   color: #fff;
@@ -181,16 +178,6 @@ header {
   padding: 6px;
   border-radius: 50%;
 }
-/* Now, when you use the SearchComponent in your React app, the search container will have rounded corners, the search input will have a white background, the search icon will have a green background, and the filter icon will also be green and part of the search input. The dropdown menu will have a light-grey background. */
-
-
-
-
-
-
-
-
-
 
   /* styles.css */
 
@@ -301,32 +288,47 @@ button {
   width: 100%;
 }
 
-.about-content {
+.about-container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  align-items: stretch;
   width: 100%;
+  min-height: 70vh;
+}
+
+.about-item {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  /* min-height: 50%; */
 }
 
 .about-text {
-  flex: 1;
-  width: 50%;
-  padding: 40px;
-  background-color: #27563A;
+  padding: 37px;
+  background-color: #27563a;
   color: #fff;
   line-height: 1.9rem;
-  font-size: 20px;
+  font-size: 15px;
+  flex-grow: 1;
 }
 
+h4{
+  padding: 10px;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+p {
+  padding: 10px;
+  margin-left: 10px;
+}
+
+
 .about-image {
-  flex: 1;
-  width: 50%;
-  height: 400px;
+  height: 0;
+  padding-bottom: 50%;
   background-size: cover;
   background-position: center;
 }
-
 /* PropertyExplore.css */
 
 .property-explore {
@@ -376,6 +378,12 @@ button {
 .property-details h3 {
   font-size: 20px;
   margin-bottom: 10px;
+  color: #fff;
+}
+
+.property-explore h2 {
+color: #fff;
+font-size: 50px;
 }
 
 .property-details p {
