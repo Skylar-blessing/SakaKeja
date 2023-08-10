@@ -3,6 +3,8 @@ import React from 'react';
 import Welcome from './Welcome';
 import OurCompany from './OurCompany';
 import PropertyExplore from './PropertyExplore';
+import ContactUs from './ContactUs';
+import Blog from './Blog';
 
 
 const Main = () => {
@@ -12,6 +14,9 @@ const Main = () => {
       <Welcome />
       <OurCompany />
       <PropertyExplore />
+      <Blog />
+      <ContactUs />
+
     </div>
   );
 };

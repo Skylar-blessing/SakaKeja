@@ -330,7 +330,7 @@ button {
 /* PropertyExplore.css */
 
 .property-explore {
-  /* background-image: url('./images/ii.jpg');  */
+  background-image: url('./images/pexels-pramod-tiwari-14421753.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -661,3 +661,169 @@ button {
     border-radius: 0;
   }
 }
+
+
+/* ContactUs Page */
+.contact-us-container {
+  background-color: #f7f7f7;
+  padding: 80px 0;
+  text-align: center;
+  background-image: url('./images/ll.jpg');
+}
+
+.contact-us-container h2 {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+}
+
+.contact-options {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 60px;
+}
+
+.contact-option {
+  flex: 1;
+  max-width: 300px;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.contact-option:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.contact-icon {
+  font-size: 2rem;
+  margin-right: 10px;
+}
+
+.contact-form {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 40px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.contact-form h3 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.contact-form textarea {
+  resize: vertical;
+}
+
+.contact-form button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.contact-form button:hover {
+  background-color: #0056b3;
+}
+
+
+/* blog.css */
+.blog-container {
+  padding: 0px 0;
+  background-color: #f7f7f7;
+  text-align: center;
+}
+
+.section-heading {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 40px;
+}
+
+.blog-post {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  padding: 40px;
+  margin-bottom: 40px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.blog-post:hover {
+  transform: translateY(-10px);
+}
+
+.blog-post-image {
+  flex: 1;
+  max-width: 300px;
+  margin-right: 20px;
+}
+
+.blog-post-image img {
+  max-width: 100%;
+  border-radius: 5px;
+}
+
+.blog-post-content {
+  flex: 2;
+  text-align: left;
+}
+
+.blog-post-title {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.blog-post-date {
+  font-size: 1rem;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.blog-post-text {
+  font-size: 1.1rem;
+  color: hwb(0 0% 94%);
+  margin-bottom: 20px;
+}
+
+
+
+.blog-read-more {
+  display: inline-block;
+  padding: 8px 15px;
+  background-color: #01050c98;
+  color: #fff;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.blog-read-more:hover {
+  background-color: #555;
+}
+
