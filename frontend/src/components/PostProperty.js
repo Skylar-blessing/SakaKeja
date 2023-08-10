@@ -10,6 +10,7 @@ function PostProperty() {
   const [location, setLocation] = useState('');
   const [category, setCategory] = useState('');
   const [imageFiles, setImageFiles] = useState([]);
+  const [rating, setRating] = useState('');
 
   const handleImageUpload = (event) => {
     const files = event.target.files;
@@ -24,13 +25,15 @@ const decodedToken = jwt_decode(token);
 const owner_id = decodedToken.sub.user_id; // Assuming user_id is the field for user ID
 
 const propertyData = {
-  owner_id: owner_id, // Set the owner_id with the user's ID
-  bedrooms: bedrooms,
-  description: description,
-  price: price,
-  location: location,
-  category: category,
-};
+    owner_id: owner_id,
+    number_of_rooms: bedrooms, // Make sure this matches the input field name
+    description: description,
+    price: price,
+    rating: rating,
+    location: location,
+    categories: category,
+    image_urls: imageFiles
+  };
 
     console.log(decodedToken);    
 
@@ -84,6 +87,11 @@ const propertyData = {
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+          />
+          <textarea
+          type="number"
+            value={rating}
+            onChange={(e) => setRating(e.target.value)}
           />
         </div>
         <div className="property-input">
