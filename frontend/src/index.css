@@ -602,9 +602,9 @@ font-size: 50px;
 
 /* POST PROPERTY CSS */
 .post-property-container {
-  max-width: 600px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 1px;
   background-color: #f4f4f4;
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
@@ -629,7 +629,6 @@ font-size: 50px;
 
 .property-input input,
 .property-input textarea {
-  width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -648,7 +647,7 @@ font-size: 50px;
   display: block;
   width: 100%;
   padding: 10px;
-  background-color: #007bff;
+  background-color: #013807;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -658,7 +657,7 @@ font-size: 50px;
 }
 
 .post-property-button:hover {
-  background-color: #0056b3;
+  background-color: #033302;
 }
 
 .success-message {

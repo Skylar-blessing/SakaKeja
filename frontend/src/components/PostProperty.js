@@ -88,6 +88,10 @@ const propertyData = {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
+          
+        </div>
+        <div className="property-input">
+        <label>Rating:</label>
           <textarea
           type="number"
             value={rating}
