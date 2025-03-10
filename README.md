@@ -62,13 +62,21 @@ With built-in support for user authentication, role-based access control, and in
 3. Set environment variables:
 
    export CLOUDINARY_CLOUD_NAME=your_cloud_name
+
    export CLOUDINARY_API_KEY=your_api_key
+
    export CLOUDINARY_API_SECRET=your_api_secret
+
    export EMAIL_USERNAME=your_email
+
    export EMAIL_PASSWORD=your_email_password
+
    export MAIL_DEFAULT_SENDER=your_email
+
    export PAYPAL_CLIENT_ID=your_id
+
    export PAYPAL_CLIENT_SECRET=your_secret
+
 
 4. Set up the database:
 
